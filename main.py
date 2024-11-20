@@ -17,7 +17,21 @@ def main():
         clock.tick(30)
 
         if fallTime > 50:
+            game.drop()
             fallTime = 0
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    game.move(-1, 0)
+                elif event.key == pygame.K_RIGHT:
+                    game.move(1, 0)
+                elif event.key == pygame.K_DOWN:
+                    game.drop()
+                elif event.key == pygame.K_UP:
+                    game.rotate_mino()
 
 
         if game.game_over:
