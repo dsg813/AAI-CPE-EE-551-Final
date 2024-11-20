@@ -1,4 +1,5 @@
 import pygame
+from game import Game
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def main():
@@ -6,6 +7,7 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Tetris")
     clock = pygame.time.Clock()
+    game = Game()
     fallTime = 0
 
     running = True
@@ -17,15 +19,15 @@ def main():
         if fallTime > 50:
             fallTime = 0
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
 
-            
+        if game.game_over:
+            running = False
+
+        game.drawGrid(screen)
+        game.drawMino(screen)
         pygame.display.update()
 
     pygame.quit()
 
 if __name__ == "__main__":
     main()
-
