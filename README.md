@@ -32,7 +32,7 @@ This is a Tetris game implemented using Python and Pygame. The project adheres t
 
    ```bash
    git clone https://github.com/hogan-tech/AAI-CPE-EE-551-Final
-   cd tetris-pygame
+   cd AAI-CPE-EE-551-FINAL
    ```
 
 2. Install the required dependencies:
