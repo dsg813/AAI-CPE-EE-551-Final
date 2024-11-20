@@ -1,0 +1,3 @@
+# Constants
+SCREEN_WIDTH = 300
+SCREEN_HEIGHT = 600
