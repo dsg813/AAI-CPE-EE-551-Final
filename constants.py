@@ -12,9 +12,9 @@ COLORS = [
     (0, 255, 0),  # Green
     (0, 0, 255),  # Blue
     (255, 255, 0),  # Yellow
-    (255, 165, 0),  # Orange
-    (128, 0, 128),  # Purple
-    (0, 255, 255),  # Cyan
+    #(255, 165, 0),  # Orange
+    #(128, 0, 128),  # Purple
+    #(0, 255, 255),  # Cyan
 ]
 
 # Tetrimino Shapes
