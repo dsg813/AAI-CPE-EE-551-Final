@@ -3,8 +3,6 @@
 
 This is a Tetris game implemented using Python and Pygame. The project adheres to the standard Tetris rules, allowing users to control falling Tetriminos with the keyboard.
 
-test
-
 ## Features
 
 - Fully functional Tetris gameplay.
