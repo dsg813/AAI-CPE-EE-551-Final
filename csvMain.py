@@ -118,11 +118,13 @@ if __name__ == "__main__":
                         #     print("Board with erased clusters of 8+ contiguous cells (Changes made):")
                         # else:
                         #     print("Board with erased clusters of 8+ contiguous cells (No changes):")
-                        print("All operation completed. Final board:")
-                        print_grid_with_colors(board)
+                        # print_grid_with_colors(board)
 
                         # Ensure the gravity loop runs at least once
                         changed = gravity_changed or square_changed or erase_changed
+
+                    print("All operation completed. Final board:")
+                    print_grid_with_colors(board)
 
                 except Exception as e:
                     print(f"An error occurred while processing '{filename}': {e}")
