@@ -32,26 +32,26 @@ if __name__ == "__main__":
 
                     # Process the board up to contiguous item counting
                     board = process_board_with_vision(board)
-                    print("Board with contiguous regions identified:")
-                    print_grid_with_colors(board)
+                    # print("Board with contiguous regions identified:")
+                    # print_grid_with_colors(board)
 
                     board = count_contiguous_items(board)
-                    print("Board with contiguous region sizes:")
-                    print_grid_with_colors(board)
+                    # print("Board with contiguous region sizes:")
+                    # print_grid_with_colors(board)
 
                     board, square_changed = square_changer(board)
-                    if square_changed:
-                        print("Board with squares changed for 5+ contiguous cells (Changes made):")
-                    else:
-                        print("Board with squares changed for 5+ contiguous cells (No changes):")
-                    print_grid_with_colors(board)
+                    # if square_changed:
+                    #     print("Board with squares changed for 5+ contiguous cells (Changes made):")
+                    # else:
+                    #     print("Board with squares changed for 5+ contiguous cells (No changes):")
+                    # print_grid_with_colors(board)
 
                     board, erase_changed = erase_changer(board)
-                    if erase_changed:
-                        print("Board with erased clusters of 8+ contiguous cells (Changes made):")
-                    else:
-                        print("Board with erased clusters of 8+ contiguous cells (No changes):")
-                    print_grid_with_colors(board)
+                    # if erase_changed:
+                    #     print("Board with erased clusters of 8+ contiguous cells (Changes made):")
+                    # else:
+                    #     print("Board with erased clusters of 8+ contiguous cells (No changes):")
+                    # print_grid_with_colors(board)
 
                     # Outer loop: Continue while there are changes
                     changed = True
@@ -65,8 +65,8 @@ if __name__ == "__main__":
 
                             # Step 1: Gravity Check
                             board = gravity_check(board)
-                            print(f"Board with ^ characters for cells contiguous with the bottom row, cycle {gravity_changer_counter}:")
-                            print_grid_with_colors(board)
+                            # print(f"Board with ^ characters for cells contiguous with the bottom row, cycle {gravity_changer_counter}:")
+                            # print_grid_with_colors(board)
 
                             # Step 2: Check if all non-empty cells are marked with ^
                             all_marked = True
@@ -82,11 +82,11 @@ if __name__ == "__main__":
 
                             # Step 3: Apply Gravity Changer
                             board, gravity_changed = gravity_changer(board)
-                            if gravity_changed:
-                                print(f"After applying gravity changer, cycle {gravity_changer_counter} (Changes made):")
-                            else:
-                                print(f"After applying gravity changer, cycle {gravity_changer_counter} (No changes):")
-                            print_grid_with_colors(board)
+                            # if gravity_changed:
+                            #     print(f"After applying gravity changer, cycle {gravity_changer_counter} (Changes made):")
+                            # else:
+                            #     print(f"After applying gravity changer, cycle {gravity_changer_counter} (No changes):")
+                            # print_grid_with_colors(board)
 
                         # Reset 5th characters to '-'
                         for y in range(len(board)):
@@ -94,30 +94,31 @@ if __name__ == "__main__":
                                 cell = board[y][x]
                                 board[y][x] = cell[:4] + "-" + cell[5:]
 
-                        print("Final Board after all gravity operations:")
-                        print_grid_with_colors(board)
+                        # print("Final Board after all gravity operations:")
+                        # print_grid_with_colors(board)
 
                         # Reprocess the board
                         board = process_board_with_vision(board)
-                        print("Board with contiguous regions identified:")
-                        print_grid_with_colors(board)
+                        # print("Board with contiguous regions identified:")
+                        # print_grid_with_colors(board)
 
                         board = count_contiguous_items(board)
-                        print("Board with contiguous region sizes:")
-                        print_grid_with_colors(board)
+                        # print("Board with contiguous region sizes:")
+                        # print_grid_with_colors(board)
 
                         board, square_changed = square_changer(board)
-                        if square_changed:
-                            print("Board with squares changed for 5+ contiguous cells (Changes made):")
-                        else:
-                            print("Board with squares changed for 5+ contiguous cells (No changes):")
-                        print_grid_with_colors(board)
+                        # if square_changed:
+                        #     print("Board with squares changed for 5+ contiguous cells (Changes made):")
+                        # else:
+                        #     print("Board with squares changed for 5+ contiguous cells (No changes):")
+                        # print_grid_with_colors(board)
 
                         board, erase_changed = erase_changer(board)
-                        if erase_changed:
-                            print("Board with erased clusters of 8+ contiguous cells (Changes made):")
-                        else:
-                            print("Board with erased clusters of 8+ contiguous cells (No changes):")
+                        # if erase_changed:
+                        #     print("Board with erased clusters of 8+ contiguous cells (Changes made):")
+                        # else:
+                        #     print("Board with erased clusters of 8+ contiguous cells (No changes):")
+                        print("All operation completed. Final board:")
                         print_grid_with_colors(board)
 
                         # Ensure the gravity loop runs at least once
