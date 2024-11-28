@@ -17,7 +17,7 @@ def main():
         clock.tick(30)
 
         if fallTime > 50:
-            game.drop()
+            game.drop(screen)  # Pass the screen to drop
             fallTime = 0
 
         for event in pygame.event.get():
@@ -28,11 +28,13 @@ def main():
                     game.move(-1, 0)
                 elif event.key == pygame.K_RIGHT:
                     game.move(1, 0)
-                elif event.key == pygame.K_DOWN:
-                    game.drop()
                 elif event.key == pygame.K_UP:
                     game.rotate_mino()
 
+        # Handle continuous downward movement
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_DOWN]:
+            game.drop(screen)  # Pass the screen to drop
 
         if game.game_over:
             running = False
