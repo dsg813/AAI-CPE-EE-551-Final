@@ -9,7 +9,7 @@ GRID_HEIGHT = 20  # Number of rows
 
 # Colors (comment out colors if needed)
 COLORS = {
-    "R",  # Red
+    #"R",  # Red
     "B",  # Blue
     "G",  # Green
     "Y"   # Yellow
