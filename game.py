@@ -1,7 +1,7 @@
 import pygame
 from tetrimino import Tetrimino
 from constants import GRID_WIDTH, GRID_HEIGHT, COLORS, BLOCK_SIZE
-from processBoard import update_check  # Import the renamed function
+from processBoard import update_frame  # Import the renamed function
 
 
 class Game:
@@ -42,7 +42,7 @@ class Game:
 
         # Process the board with update_check
         board = self.extract_board()  # Extract the current board state
-        updated_board = update_check(board)  # Process the board
+        updated_board = update_frame(board)  # Process the board
         self.set_board(updated_board)  # Apply the updated board state
 
         # Spawn a new Tetrimino with shape set to "circle"
