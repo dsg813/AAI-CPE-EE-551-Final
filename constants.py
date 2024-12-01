@@ -14,10 +14,9 @@ COLORS = {
     "G": (0, 255, 0),        # Green
     "B": (0, 0, 255),        # Blue
     "Y": (255, 255, 0),      # Yellow
-    # Uncomment as needed:
-    # "O": (255, 165, 0),      # Orange
-    # "P": (128, 0, 128),      # Purple
+    # "M": (255, 0, 255),      # Magenta
     # "C": (0, 255, 255),      # Cyan
+    # "W": (255, 255, 255),    # White
 }
 
 # Tetrimino Shapes
