@@ -1,4 +1,4 @@
-from processBoard import read_board_from_csv, print_grid_with_colors, process_board_with_vision, count_contiguous_items, gravity_check
+from processBoard import read_board_from_csv, printToTerminal, contiguousID, contiguousCount, gravityCheck
 from changeBoard import square_changer, erase_changer, gravity_changer
 import os
 import re
@@ -28,14 +28,14 @@ if __name__ == "__main__":
                     # Read the board
                     board = read_board_from_csv(filepath)
                     print("Board with colors applied:")
-                    print_grid_with_colors(board)
+                    printToTerminal(board)
 
                     # Process the board up to contiguous item counting
-                    board = process_board_with_vision(board)
+                    board = contiguousID(board)
                     # print("Board with contiguous regions identified:")
                     # print_grid_with_colors(board)
 
-                    board = count_contiguous_items(board)
+                    board = contiguousCount(board)
                     # print("Board with contiguous region sizes:")
                     # print_grid_with_colors(board)
 
@@ -64,7 +64,7 @@ if __name__ == "__main__":
                             gravity_changer_counter += 1
 
                             # Step 1: Gravity Check
-                            board = gravity_check(board)
+                            board = gravityCheck(board)
                             # print(f"Board with ^ characters for cells contiguous with the bottom row, cycle {gravity_changer_counter}:")
                             # print_grid_with_colors(board)
 
@@ -98,11 +98,11 @@ if __name__ == "__main__":
                         # print_grid_with_colors(board)
 
                         # Reprocess the board
-                        board = process_board_with_vision(board)
+                        board = contiguousID(board)
                         # print("Board with contiguous regions identified:")
                         # print_grid_with_colors(board)
 
-                        board = count_contiguous_items(board)
+                        board = contiguousCount(board)
                         # print("Board with contiguous region sizes:")
                         # print_grid_with_colors(board)
 
@@ -124,7 +124,7 @@ if __name__ == "__main__":
                         changed = gravity_changed or square_changed or erase_changed
 
                     print("All operation completed. Final board:")
-                    print_grid_with_colors(board)
+                    printToTerminal(board)
 
                 except Exception as e:
                     print(f"An error occurred while processing '{filename}': {e}")

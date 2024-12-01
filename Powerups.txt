@@ -1,0 +1,22 @@
+# Red     - "burn" change all blocks bordering any red block to red
+# Green   - supergravity down
+# Blue    - reduce the erase count requirement by 1 for the next 10 blocks
+# Yellow  - erase all square blocks
+# Magenta - all red and blue blocks turn magenta
+# Cyan    - supergravity right, then left
+# White   - clear the board. get white tiles by using power-ups
+
+each level increases the number of colors by 1 (from 2 to 7 (maybe more?))
+
+levels are cleared by attaining a certain number of square or erased blocks
+powerups will be clickable icons that can be used as desired
+
+make animations for cool stuff happening
+
+add color weighting to tetriminos
+
+need menus.
+score is number of blocks erased
+go to next level after XX score
+instructions
+difficulty setting

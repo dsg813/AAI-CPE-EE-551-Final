@@ -30,7 +30,7 @@ def main():
                 elif event.key == pygame.K_RIGHT:
                     game.move(1, 0)
                 elif event.key == pygame.K_UP:
-                    game.rotate_mino()
+                    game.rotateMino()
 
         # Handle continuous downward movement
         keys = pygame.key.get_pressed()
