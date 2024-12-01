@@ -1,6 +1,6 @@
-import csv
 import os
 import re
+from constants import COLORS
 
 # Terminal color codes
 COLOR_CODES = {
@@ -19,12 +19,11 @@ TEST_CASES_FOLDER = "Test Cases CSVs"
 FILENAME_PATTERN = r"^\d{2}.*\.csv$"
 
 def read_board_from_csv(filepath):
-    """Reads the Tetris board from a CSV file."""
+    """Reads the Tetris board from a CSV file by splitting each line at commas."""
     board = []
     with open(filepath, "r") as file:
-        reader = csv.reader(file)
-        for row in reader:
-            board.append(row)
+        for line in file:
+            board.append(line.strip().split(","))  # Strip newline and split by commas
     return board
 
 def print_grid_with_colors(board):
