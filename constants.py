@@ -4,18 +4,21 @@ SCREEN_HEIGHT = 600
 BLOCK_SIZE = 30
 GRID_WIDTH = SCREEN_WIDTH // BLOCK_SIZE
 GRID_HEIGHT = SCREEN_HEIGHT // BLOCK_SIZE
+SQUARE_REQ = 5
+EMPTY_REQ = 8
 
-# Colors
-COLORS = [
-    (0, 0, 0),  # Background
-    (255, 0, 0),  # Red
-    (0, 255, 0),  # Green
-    (0, 0, 255),  # Blue
-    (255, 255, 0),  # Yellow
-    #(255, 165, 0),  # Orange
-    #(128, 0, 128),  # Purple
-    #(0, 255, 255),  # Cyan
-]
+# Colors as a dictionary with single-character keys
+COLORS = {
+    "0": (0, 0, 0),          # Background
+    "R": (255, 0, 0),        # Red
+    "G": (0, 255, 0),        # Green
+    "B": (0, 0, 255),        # Blue
+    "Y": (255, 255, 0),      # Yellow
+    # Uncomment as needed:
+    # "O": (255, 165, 0),      # Orange
+    # "P": (128, 0, 128),      # Purple
+    # "C": (0, 255, 255),      # Cyan
+}
 
 # Tetrimino Shapes
 SHAPES = [

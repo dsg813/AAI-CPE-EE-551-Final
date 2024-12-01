@@ -1,6 +1,6 @@
 import pygame
 from game import Game
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS
 
 def main():
     pygame.init()
@@ -12,7 +12,8 @@ def main():
 
     running = True
     while running:
-        screen.fill((0, 0, 0))
+        # Use the background color from the COLORS dictionary
+        screen.fill(COLORS["0"])
         fallTime += clock.get_rawtime()
         clock.tick(30)
 
