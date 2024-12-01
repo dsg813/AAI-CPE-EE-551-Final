@@ -1,7 +1,7 @@
 import pygame
 from tetrimino import Tetrimino
 from constants import GRID_WIDTH, GRID_HEIGHT, COLORS, BLOCK_SIZE
-from processBoard import update_frame  # Import the renamed function
+from processBoard import updateFrame  # Import the renamed function
 
 
 class Game:
@@ -41,9 +41,9 @@ class Game:
                     self.shape_grid[self.current_mino.y + y][self.current_mino.x + x] = "circle"  # Set shape to circle
 
         # Process the board with update_check
-        board = self.extract_board()  # Extract the current board state
-        updated_board = update_frame(board)  # Process the board
-        self.set_board(updated_board)  # Apply the updated board state
+        board = self.getBoard()  # Extract the current board state
+        updated_board = updateFrame(board)  # Process the board
+        self.setBoard(updated_board)  # Apply the updated board state
 
         # Spawn a new Tetrimino with shape set to "circle"
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
@@ -60,7 +60,7 @@ class Game:
             self.current_mino.x += dx
             self.current_mino.y += dy
 
-    def rotate_mino(self):
+    def rotateMino(self):
         old_shape = self.current_mino.shape[:]
         self.current_mino.rotate()
         if self.checkCollision(self.current_mino.shape, 0, 0):
@@ -116,7 +116,7 @@ class Game:
                         int(BLOCK_SIZE * 0.475)
                     )
 
-    def extract_board(self):
+    def getBoard(self):
         """Extracts the board state from the current game instance."""
         board = []
         for y in range(len(self.grid)):
@@ -136,7 +136,7 @@ class Game:
             board.append(row)
         return board
 
-    def set_board(self, board):
+    def setBoard(self, board):
         """Updates the game state from a given board representation."""
         for y in range(len(board)):
             for x in range(len(board[0])):

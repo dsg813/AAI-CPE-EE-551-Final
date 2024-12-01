@@ -1,6 +1,6 @@
 import os
 import re
-from processBoard import update_frame  # Import the update_check function
+from processBoard import updateFrame  # Import the update_check function
 
 # Folder containing test cases
 TEST_CASES_FOLDER = "Test Cases CSVs"
@@ -34,7 +34,7 @@ def main():
                 board = [line.strip().split(",") for line in file]
 
             # Call update_check
-            update_frame(board)
+            updateFrame(board)
 
         except Exception as e:
             print(f"Error processing file '{filepath}': {e}")

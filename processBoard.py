@@ -12,24 +12,24 @@ COLOR_CODES = {
     "RESET": "\033[0m"  # Reset to default
 }
 
-def update_codes(board):
+def updateCodes(board):
     # Process the board up to contiguous item counting
-    board = process_board_with_vision(board)
+    board = contiguousID(board)
     # print("Board with contiguous regions identified:")
     # print_grid_with_colors(board)
 
-    board = count_contiguous_items(board)
+    board = contiguousCount(board)
     # print("Board with contiguous region sizes:")
     # print_grid_with_colors(board)
 
-    board, square_changed = square_changer(board)
+    board, square_changed = squareChanger(board)
     # if square_changed:
     #     print("Board with squares changed for 5+ contiguous cells (Changes made):")
     # else:
     #     print("Board with squares changed for 5+ contiguous cells (No changes):")
     # print_grid_with_colors(board)
 
-    board, erase_changed = erase_changer(board)
+    board, erase_changed = eraseChanger(board)
     # if erase_changed:
     #     print("Board with erased clusters of 8+ contiguous cells (Changes made):")
     # else:
@@ -39,16 +39,16 @@ def update_codes(board):
     return board, erase_changed, square_changed
 
 
-def update_frame(board):
+def updateFrame(board):
     """
     Updates the game state frame by frame, processing the board based on game physics
     """
 
     try:
         print("Initial board state extracted from the game:")
-        print_grid_with_colors(board)
+        printToTerminal(board)
 
-        board, erase_changed, square_changed = update_codes(board)
+        board, erase_changed, square_changed = updateCodes(board)
 
         # Outer loop: Continue while there are changes
         changed = True
@@ -61,7 +61,7 @@ def update_frame(board):
                 # gravity_changer_counter += 1 # used to check number of iterations if desired (2 of 3)
 
                 # Step 1: Gravity Check
-                board = gravity_check(board)
+                board = gravityCheck(board)
                 # print(f"Board with ^ characters for cells contiguous with the bottom row, cycle {gravity_changer_counter}:") # used to check number of iterations if desired (3 of 3)
                 # print_grid_with_colors(board)
 
@@ -78,7 +78,7 @@ def update_frame(board):
                     break
 
                 # Step 3: Apply Gravity Changer
-                board, gravity_changed = gravity_changer(board)
+                board, gravity_changed = gravityChanger(board)
                 # if gravity_changed:
                 #     print(f"After applying gravity changer, cycle {gravity_changer_counter} (Changes made):")
                 # else:
@@ -94,13 +94,13 @@ def update_frame(board):
             # print("Final board after all gravity operations:")
             # print_grid_with_colors(board)
 
-            board, erase_changed, square_changed = update_codes(board)
+            board, erase_changed, square_changed = updateCodes(board)
 
             # Ensure the gravity loop runs at least once
             changed = gravity_changed or square_changed or erase_changed
 
         print("All operations completed. Final board:")
-        print_grid_with_colors(board)
+        printToTerminal(board)
 
 
         # Update the game state at the end
@@ -109,7 +109,8 @@ def update_frame(board):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def print_grid_with_colors(board):
+# I want to change this to the string print thing in the class
+def printToTerminal(board):
     """
     Prints the grid to the terminal with color-coded cells, disable with comments after testing is done
     """
@@ -124,16 +125,16 @@ def print_grid_with_colors(board):
         print(line)
     print()  # Blank line for spacing
 
-def process_board_with_vision(board):
+def contiguousID(board):
     """
     Processes the board using the vision algorithm for each unique color
     """
     unique_colors = set(cell[0] for row in board for cell in row if cell[:4] != "0000")
     for color in unique_colors:
-        board = apply_vision_algorithm(board, color)
+        board = visionAlgorithm(board, color)
     return board
 
-def apply_vision_algorithm(board, target_color):
+def visionAlgorithm(board, target_color):
     """
     Labels regions based on contiguous blocks, by color
     """
@@ -165,7 +166,7 @@ def apply_vision_algorithm(board, target_color):
                 next_label += 1
 
     # Step 3: Assign cluster labels iteratively until stable
-    cluster_label = cluster_labeler(MASK, cluster_label, rows, cols)
+    cluster_label = clusterLabeler(MASK, cluster_label, rows, cols)
 
     # Step 4: Create a set of all unique cluster labels and map them to cluster IDs
     unique_labels = set()
@@ -193,7 +194,7 @@ def apply_vision_algorithm(board, target_color):
 
     return board
 
-def count_contiguous_items(board):
+def contiguousCount(board):
     """
     Counts contiguous items and updates each cell's last 2 indices with the count
     """
@@ -236,7 +237,7 @@ def count_contiguous_items(board):
     return board
 
 
-def gravity_check(board):
+def gravityCheck(board):
     """
     Applies a gravity check to the board:
     - Adds an extra row and column for MASK and cluster_label to handle boundary checks.
@@ -270,7 +271,7 @@ def gravity_check(board):
                 next_label += 1
 
     # Step 3: Assign cluster labels iteratively until stable
-    cluster_label = cluster_labeler(MASK, cluster_label, rows, cols)
+    cluster_label = clusterLabeler(MASK, cluster_label, rows, cols)
 
 
     # Step 4: Find all cluster labels connected to the bottom row
@@ -286,7 +287,7 @@ def gravity_check(board):
 
     return board
 
-def square_changer(board):
+def squareChanger(board):
     """
     C for circle, S for square. C changes to S for all clustered cells when cluster size 5+
     """
@@ -305,7 +306,7 @@ def square_changer(board):
     return board, has_changes
 
 
-def erase_changer(board):
+def eraseChanger(board):
     """
     Clusters with 8 or more items are reset to 0000-00
     """
@@ -320,7 +321,7 @@ def erase_changer(board):
                     has_changes = True
     return board, has_changes
 
-def gravity_changer(board):
+def gravityChanger(board):
     """
     Moves cells with a "-" as their 5th character down by one row.
     Assumes gravity_check has already been applied (gravity check assigns ^ to any cell contiguous with the bottom)
@@ -341,7 +342,7 @@ def gravity_changer(board):
 
     return board, has_changes
 
-def cluster_labeler(MASK, cluster_label, rows, cols):
+def clusterLabeler(MASK, cluster_label, rows, cols):
     """
     Labels clusters
     This code is inefficient for now, but it works. It checks every cell, on every iteration
