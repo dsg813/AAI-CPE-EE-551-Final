@@ -21,6 +21,9 @@ class Game:
             f"Score: {self.score}", True, (255, 255, 255))
         screen.blit(score_surface, (10, 10))  # Display at (10, 10)
 
+    def updateScore(self, newScore):
+        self.score += newScore
+
     def checkCollision(self, shape, offset_x, offset_y):
         for y in range(len(shape)):
             row = shape[y]
@@ -33,7 +36,6 @@ class Game:
                         new_x < 0 or
                         new_x >= GRID_WIDTH or
                         new_y >= GRID_HEIGHT or
-                        # Check for non-background cells
                         self.grid[new_y][new_x] != "0"
                     ):
                         return True
@@ -47,25 +49,24 @@ class Game:
                 cell = row[x]
                 if cell:
                     color_key = list(COLORS.keys())[cell]
-                    self.grid[self.current_mino.y + y][self.current_mino.x + x] = color_key
-                    self.shape_grid[self.current_mino.y + y][self.current_mino.x + x] = "circle"  # Set shape to circle
+                    self.grid[self.current_mino.y +
+                              y][self.current_mino.x + x] = color_key
+                    self.shape_grid[self.current_mino.y +
+                                    y][self.current_mino.x + x] = "circle"
 
-        # Process the board with update_check
-        board = self.getBoard()  # Extract the current board state
-        updated_board = updateFrame(board)  # Process the board
-        self.setBoard(updated_board)  # Apply the updated board state
+        board = self.getBoard()
+        updated_board, eliminated_blocks = updateFrame(board)
 
-        # Increment the score based on the result of board processing
-        # Assuming `updateFrame` can return the number of rows cleared
-        rows_cleared = sum(1 for row in updated_board if all(cell == "0" for cell in row))
-        self.score += rows_cleared * 100  # Award 100 points per cleared row
+        self.setBoard(updated_board)
 
-        # Spawn a new Tetrimino with shape set to "circle"
+        self.updateScore(eliminated_blocks * 100)
+
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
         for y in range(len(self.current_mino.shape)):
             for x in range(len(self.current_mino.shape[y])):
                 if self.current_mino.shape[y][x]:
-                    self.shape_grid[self.current_mino.y + y][self.current_mino.x + x] = "circle"
+                    self.shape_grid[self.current_mino.y +
+                                    y][self.current_mino.x + x] = "circle"
 
         if self.checkCollision(self.current_mino.shape, 0, 0):
             self.game_over = True
@@ -92,7 +93,6 @@ class Game:
             row = self.grid[y]
             for x in range(len(row)):
                 color_key = row[x]
-                # Use the color dictionary with character keys
                 color = COLORS[color_key]
                 shape = self.shape_grid[y][x]
                 if shape == "circle":
@@ -161,7 +161,6 @@ class Game:
         for y in range(len(board)):
             for x in range(len(board[0])):
                 cell = board[y][x]
-                # Update the grid with the color code
                 self.grid[y][x] = cell[0]
                 if cell[1] == "C":
                     self.shape_grid[y][x] = "circle"

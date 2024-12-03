@@ -42,7 +42,7 @@ def main():
 
         game.drawGrid(screen)
         game.drawMino(screen)
-        game.renderScore(screen)  # Display the score
+        game.renderScore(screen)
         pygame.display.update()
 
     pygame.quit()

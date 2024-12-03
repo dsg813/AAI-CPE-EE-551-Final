@@ -1,4 +1,5 @@
 from constants import SQUARE_REQ, EMPTY_REQ
+
 # Terminal color codes
 COLOR_CODES = {
     "0": "\033[90m",  # Gray for blank
@@ -29,33 +30,37 @@ def updateCodes(board):
     #     print("Board with squares changed for 5+ contiguous cells (No changes):")
     # print_grid_with_colors(board)
 
-    board, erase_changed = eraseChanger(board)
+    board, erase_changed, eliminated_blocks = eraseChanger(board)
     # if erase_changed:
     #     print("Board with erased clusters of 8+ contiguous cells (Changes made):")
     # else:
     #     print("Board with erased clusters of 8+ contiguous cells (No changes):")
     # print_grid_with_colors(board)
 
-    return board, erase_changed, square_changed
+    return board, erase_changed, square_changed, eliminated_blocks
 
 
 def updateFrame(board):
     """
     Updates the game state frame by frame, processing the board based on game physics
     """
-
+    Eliminated_Total_Blocks = 0
     try:
-        print("Initial board state extracted from the game:")
-        printToTerminal(board)
 
-        board, erase_changed, square_changed = updateCodes(board)
+        # print("Initial board state extracted from the game:")
+        # printToTerminal(board)
+
+        board, erase_changed, square_changed, eliminated_blocks = updateCodes(board)
+
+        Eliminated_Total_Blocks += eliminated_blocks
 
         # Outer loop: Continue while there are changes
         changed = True
         while changed:
             # gravity_changer_counter = 0 # used to check number of iterations if desired (1 of 3)
             gravity_changed = False  # Reset gravity change tracker
-
+            
+            
             # Inner loop: Gravity operations (run at least once)
             while True:
                 # gravity_changer_counter += 1 # used to check number of iterations if desired (2 of 3)
@@ -72,18 +77,24 @@ def updateFrame(board):
                         if board[y][x][:4] != "0000" and board[y][x][4] != "^":  # Non-empty and not marked with ^
                             all_marked = False
                             break
+                
+                  
 
                 # If all cells are marked, stop the loop
                 if all_marked:
                     break
+                
 
                 # Step 3: Apply Gravity Changer
                 board, gravity_changed = gravityChanger(board)
+
+
                 # if gravity_changed:
                 #     print(f"After applying gravity changer, cycle {gravity_changer_counter} (Changes made):")
                 # else:
                 #     print(f"After applying gravity changer, cycle {gravity_changer_counter} (No changes):")
                 # print_grid_with_colors(board)
+
 
             # Reset 5th characters to '-'
             for y in range(len(board)):
@@ -94,20 +105,23 @@ def updateFrame(board):
             # print("Final board after all gravity operations:")
             # print_grid_with_colors(board)
 
-            board, erase_changed, square_changed = updateCodes(board)
 
+            board, erase_changed, square_changed, eliminated_blocks = updateCodes(board)
+            Eliminated_Total_Blocks += eliminated_blocks
             # Ensure the gravity loop runs at least once
             changed = gravity_changed or square_changed or erase_changed
 
-        print("All operations completed. Final board:")
-        printToTerminal(board)
+        # print("All operations completed. Final board:")
+        # printToTerminal(board)
 
 
         # Update the game state at the end
-        return board
+
+        return board, Eliminated_Total_Blocks
 
     except Exception as e:
         print(f"An error occurred: {e}")
+        return board, 0
 
 # I want to change this to the string print thing in the class
 def printToTerminal(board):
@@ -311,6 +325,8 @@ def eraseChanger(board):
     Clusters with 8 or more items are reset to 0000-00
     """
     has_changes = False
+    eliminated_blocks = 0
+
     for y in range(len(board)):
         for x in range(len(board[0])):
             cell = board[y][x]
@@ -319,7 +335,9 @@ def eraseChanger(board):
                 if cluster_size >= EMPTY_REQ:
                     board[y][x] = "0000-00"
                     has_changes = True
-    return board, has_changes
+                    eliminated_blocks += 1
+
+    return board, has_changes, eliminated_blocks
 
 def gravityChanger(board):
     """
