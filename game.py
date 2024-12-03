@@ -6,11 +6,20 @@ from processBoard import updateFrame  # Import the renamed function
 
 class Game:
     def __init__(self):
-        self.grid = [["0"] * GRID_WIDTH for _ in range(GRID_HEIGHT)]  # Initialize with background "0"
-        self.shape_grid = [["circle" for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        # Initialize with background "0"
+        self.grid = [["0"] * GRID_WIDTH for _ in range(GRID_HEIGHT)]
+        self.shape_grid = [["circle" for _ in range(
+            GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
         self.game_over = False
         self.score = 0
+        self.font = pygame.font.Font(None, 36)
+
+    def renderScore(self, screen):
+        """Renders the score at the top of the screen."""
+        score_surface = self.font.render(
+            f"Score: {self.score}", True, (255, 255, 255))
+        screen.blit(score_surface, (10, 10))  # Display at (10, 10)
 
     def checkCollision(self, shape, offset_x, offset_y):
         for y in range(len(shape)):
@@ -24,7 +33,8 @@ class Game:
                         new_x < 0 or
                         new_x >= GRID_WIDTH or
                         new_y >= GRID_HEIGHT or
-                        self.grid[new_y][new_x] != "0"  # Check for non-background cells
+                        # Check for non-background cells
+                        self.grid[new_y][new_x] != "0"
                     ):
                         return True
         return False
@@ -44,6 +54,11 @@ class Game:
         board = self.getBoard()  # Extract the current board state
         updated_board = updateFrame(board)  # Process the board
         self.setBoard(updated_board)  # Apply the updated board state
+
+        # Increment the score based on the result of board processing
+        # Assuming `updateFrame` can return the number of rows cleared
+        rows_cleared = sum(1 for row in updated_board if all(cell == "0" for cell in row))
+        self.score += rows_cleared * 100  # Award 100 points per cleared row
 
         # Spawn a new Tetrimino with shape set to "circle"
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
@@ -77,13 +92,15 @@ class Game:
             row = self.grid[y]
             for x in range(len(row)):
                 color_key = row[x]
-                color = COLORS[color_key]  # Use the color dictionary with character keys
+                # Use the color dictionary with character keys
+                color = COLORS[color_key]
                 shape = self.shape_grid[y][x]
                 if shape == "circle":
                     pygame.draw.circle(
                         screen,
                         color,
-                        (x * BLOCK_SIZE + BLOCK_SIZE // 2, y * BLOCK_SIZE + BLOCK_SIZE // 2),
+                        (x * BLOCK_SIZE + BLOCK_SIZE // 2,
+                         y * BLOCK_SIZE + BLOCK_SIZE // 2),
                         int(BLOCK_SIZE * 0.475),
                     )
                 elif shape == "square":
@@ -105,13 +122,16 @@ class Game:
             for x in range(len(row)):
                 cell = row[x]
                 if cell:
-                    color_key = list(COLORS.keys())[cell]  # Get the corresponding key for this color
+                    # Get the corresponding key for this color
+                    color_key = list(COLORS.keys())[cell]
                     pygame.draw.circle(
                         screen,
                         COLORS[color_key],
                         (
-                            (self.current_mino.x + x) * BLOCK_SIZE + BLOCK_SIZE // 2,
-                            (self.current_mino.y + y) * BLOCK_SIZE + BLOCK_SIZE // 2,
+                            (self.current_mino.x + x) *
+                            BLOCK_SIZE + BLOCK_SIZE // 2,
+                            (self.current_mino.y + y) *
+                            BLOCK_SIZE + BLOCK_SIZE // 2,
                         ),
                         int(BLOCK_SIZE * 0.475)
                     )
@@ -141,11 +161,11 @@ class Game:
         for y in range(len(board)):
             for x in range(len(board[0])):
                 cell = board[y][x]
-                self.grid[y][x] = cell[0]  # Update the grid with the color code
+                # Update the grid with the color code
+                self.grid[y][x] = cell[0]
                 if cell[1] == "C":
                     self.shape_grid[y][x] = "circle"
                 elif cell[1] == "S":
                     self.shape_grid[y][x] = "square"
                 else:
                     self.shape_grid[y][x] = None
-
