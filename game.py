@@ -15,11 +15,6 @@ class Game:
         self.offset_x = (SCREEN_WIDTH - GRID_WIDTH * BLOCK_SIZE) // 2
         self.offset_y = (SCREEN_HEIGHT - GRID_HEIGHT * BLOCK_SIZE) // 2
 
-    def renderScore(self, screen):
-        """Renders the score at the top of the screen."""
-        score_surface = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
-        screen.blit(score_surface, (self.offset_x + 10, 10))  # Offset for the new board
-
     def updateScore(self, newScore):
         self.score += newScore
 
@@ -87,15 +82,15 @@ class Game:
         else:
             self.lockMino(screen)
 
-    def drawGrid(self, screen):
+    def drawGrid(self, screen, offset_x=0):
         for y in range(len(self.grid)):
             row = self.grid[y]
             for x in range(len(row)):
                 color_key = row[x]
                 color = COLORS[color_key]
                 shape = self.shape_grid[y][x]
-                rect_x = self.offset_x + x * BLOCK_SIZE
-                rect_y = self.offset_y + y * BLOCK_SIZE
+                rect_x = offset_x + x * BLOCK_SIZE
+                rect_y = y * BLOCK_SIZE
 
                 if shape == "circle":
                     pygame.draw.circle(
@@ -117,26 +112,27 @@ class Game:
                     1,
                 )
 
-                
-    def drawMino(self, screen):
+    def drawMino(self, screen, offset_x=0):
         for y in range(len(self.current_mino.shape)):
             row = self.current_mino.shape[y]
             for x in range(len(row)):
                 cell = row[x]
                 if cell:
-                    # Get the corresponding key for this color
                     color_key = list(COLORS.keys())[cell]
                     pygame.draw.circle(
                         screen,
                         COLORS[color_key],
                         (
-                            (self.current_mino.x + x) *
-                            BLOCK_SIZE + BLOCK_SIZE // 2,
-                            (self.current_mino.y + y) *
-                            BLOCK_SIZE + BLOCK_SIZE // 2,
+                            offset_x + (self.current_mino.x + x) * BLOCK_SIZE + BLOCK_SIZE // 2,
+                            (self.current_mino.y + y) * BLOCK_SIZE + BLOCK_SIZE // 2,
                         ),
                         int(BLOCK_SIZE * 0.475)
                     )
+
+    def renderScore(self, screen, offset_x=0, offset_y=0):
+        """Renders the score with a given offset."""
+        score_surface = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        screen.blit(score_surface, (offset_x, offset_y))
 
     def getBoard(self):
         """Extracts the board state from the current game instance."""

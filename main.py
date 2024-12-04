@@ -1,51 +1,96 @@
 import pygame
 from game import Game
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, BLOCK_SIZE
+
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("Tetris")
+
+    # Screen dimensions for two boards
+    screen = pygame.display.set_mode((SCREEN_WIDTH * 2, SCREEN_HEIGHT))
+    pygame.display.set_caption("Tetris Battle")
     clock = pygame.time.Clock()
-    game = Game()
-    fallTime = 0
+
+    # Create two Game instances
+    player1_game = Game()
+    player2_game = Game()
+
+    fall_time_p1 = 0
+    fall_time_p2 = 0
 
     running = True
     while running:
-        # Use the background color from the COLORS dictionary
-        screen.fill(COLORS["0"])
-        fallTime += clock.get_rawtime()
-        clock.tick(30)
+        screen.fill(COLORS["0"])  # Clear the screen
+        delta_time = clock.tick(30)
 
-        if fallTime > 50:
-            game.drop(screen)  # Pass the screen to drop
-            fallTime = 0
+        # Update fall times
+        fall_time_p1 += delta_time
+        fall_time_p2 += delta_time
 
+        if fall_time_p1 > 500:  # Player 1 drop interval
+            player1_game.drop(screen)
+            fall_time_p1 = 0
+
+        if fall_time_p2 > 500:  # Player 2 drop interval
+            player2_game.drop(screen)
+            fall_time_p2 = 0
+
+        # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    game.move(-1, 0)
+                # Player 1 controls
+                if event.key == pygame.K_w:
+                    player1_game.rotateMino()
+                elif event.key == pygame.K_a:
+                    player1_game.move(-1, 0)
+                elif event.key == pygame.K_d:
+                    player1_game.move(1, 0)
+                elif event.key == pygame.K_s:
+                    player1_game.drop(screen)
+
+                # Player 2 controls
+                if event.key == pygame.K_UP:
+                    player2_game.rotateMino()
+                elif event.key == pygame.K_LEFT:
+                    player2_game.move(-1, 0)
                 elif event.key == pygame.K_RIGHT:
-                    game.move(1, 0)
-                elif event.key == pygame.K_UP:
-                    game.rotateMino()
+                    player2_game.move(1, 0)
+                elif event.key == pygame.K_DOWN:
+                    player2_game.drop(screen)
 
-        # Handle continuous downward movement
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_DOWN]:
-            game.drop(screen)  # Pass the screen to drop
-
-        if game.game_over:
+        # Check for game over
+        if player1_game.game_over or player2_game.game_over:
             running = False
 
-        game.drawGrid(screen)
-        game.drawMino(screen)
-        game.renderScore(screen)
+        # Draw both game boards
+        player1_game.drawGrid(screen, offset_x=0)  # Player 1 on the left
+        player1_game.drawMino(screen, offset_x=0)
+        player1_game.renderScore(screen, offset_x=10, offset_y=10)
+
+        # Player 2 on the right
+        player2_game.drawGrid(screen, offset_x=SCREEN_WIDTH)
+        player2_game.drawMino(screen, offset_x=SCREEN_WIDTH)
+        player2_game.renderScore(
+            screen, offset_x=SCREEN_WIDTH + 10, offset_y=10)
+
+        separator_width = 5
+        pygame.draw.rect(
+            screen,
+            (255, 255, 255),
+            (
+                SCREEN_WIDTH - separator_width // 2,
+                0,
+                separator_width,
+                SCREEN_HEIGHT
+            )
+        )
+
         pygame.display.update()
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
