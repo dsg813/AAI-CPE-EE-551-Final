@@ -1,25 +1,24 @@
 import pygame
 from tetrimino import Tetrimino
-from constants import GRID_WIDTH, GRID_HEIGHT, COLORS, BLOCK_SIZE
+from constants import GRID_WIDTH, GRID_HEIGHT, COLORS, BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH
 from processBoard import updateFrame  # Import the renamed function
 
 
 class Game:
     def __init__(self):
-        # Initialize with background "0"
         self.grid = [["0"] * GRID_WIDTH for _ in range(GRID_HEIGHT)]
-        self.shape_grid = [["circle" for _ in range(
-            GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        self.shape_grid = [["circle" for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
         self.game_over = False
         self.score = 0
         self.font = pygame.font.Font(None, 36)
+        self.offset_x = (SCREEN_WIDTH - GRID_WIDTH * BLOCK_SIZE) // 2
+        self.offset_y = (SCREEN_HEIGHT - GRID_HEIGHT * BLOCK_SIZE) // 2
 
     def renderScore(self, screen):
         """Renders the score at the top of the screen."""
-        score_surface = self.font.render(
-            f"Score: {self.score}", True, (255, 255, 255))
-        screen.blit(score_surface, (10, 10))  # Display at (10, 10)
+        score_surface = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        screen.blit(score_surface, (self.offset_x + 10, 10))  # Offset for the new board
 
     def updateScore(self, newScore):
         self.score += newScore
@@ -95,27 +94,30 @@ class Game:
                 color_key = row[x]
                 color = COLORS[color_key]
                 shape = self.shape_grid[y][x]
+                rect_x = self.offset_x + x * BLOCK_SIZE
+                rect_y = self.offset_y + y * BLOCK_SIZE
+
                 if shape == "circle":
                     pygame.draw.circle(
                         screen,
                         color,
-                        (x * BLOCK_SIZE + BLOCK_SIZE // 2,
-                         y * BLOCK_SIZE + BLOCK_SIZE // 2),
+                        (rect_x + BLOCK_SIZE // 2, rect_y + BLOCK_SIZE // 2),
                         int(BLOCK_SIZE * 0.475),
                     )
                 elif shape == "square":
                     pygame.draw.rect(
                         screen,
                         color,
-                        (x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                        (rect_x, rect_y, BLOCK_SIZE, BLOCK_SIZE),
                     )
                 pygame.draw.rect(
                     screen,
                     (50, 50, 50),  # Gray color for the grid lines
-                    (x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                    (rect_x, rect_y, BLOCK_SIZE, BLOCK_SIZE),
                     1,
                 )
 
+                
     def drawMino(self, screen):
         for y in range(len(self.current_mino.shape)):
             row = self.current_mino.shape[y]
