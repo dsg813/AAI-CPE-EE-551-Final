@@ -1,6 +1,6 @@
 import pygame
 from tetrimino import Tetrimino
-from constants import GRID_WIDTH, GRID_HEIGHT, COLORS, BLOCK_SIZE
+from constants import GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, getColors, getWhite, setWhite
 from processBoard import updateFrame  # Import the renamed function
 
 
@@ -31,6 +31,9 @@ class Game:
 
     def lockMino(self, screen):
         """Locks the current Tetrimino into the grid and processes the board."""
+        COLORS = getColors()
+
+        # Lock the current Tetrimino into the grid
         for y in range(len(self.current_mino.shape)):
             row = self.current_mino.shape[y]
             for x in range(len(row)):
@@ -45,13 +48,16 @@ class Game:
         updated_board = updateFrame(board)  # Process the board
         self.setBoard(updated_board)  # Apply the updated board state
 
-        # Spawn a new Tetrimino with shape set to "circle"
+        # Spawn a new Tetrimino
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
+
+        # Update shape grid to "circle"
         for y in range(len(self.current_mino.shape)):
             for x in range(len(self.current_mino.shape[y])):
                 if self.current_mino.shape[y][x]:
                     self.shape_grid[self.current_mino.y + y][self.current_mino.x + x] = "circle"
 
+        # Check for game over condition
         if self.checkCollision(self.current_mino.shape, 0, 0):
             self.game_over = True
 
@@ -73,6 +79,7 @@ class Game:
             self.lockMino(screen)
 
     def drawGrid(self, screen):
+        COLORS = getColors()
         for y in range(len(self.grid)):
             row = self.grid[y]
             for x in range(len(row)):
@@ -100,6 +107,7 @@ class Game:
                 )
 
     def drawMino(self, screen):
+        COLORS = getColors()
         for y in range(len(self.current_mino.shape)):
             row = self.current_mino.shape[y]
             for x in range(len(row)):
@@ -148,4 +156,3 @@ class Game:
                     self.shape_grid[y][x] = "square"
                 else:
                     self.shape_grid[y][x] = None
-

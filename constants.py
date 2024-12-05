@@ -10,13 +10,14 @@ EMPTY_REQ = 8
 # Colors as a dictionary with single-character keys
 COLORS = {
     "0": (0, 0, 0),          # Background
+    "W": (255, 255, 255),    # White
     "R": (255, 0, 0),        # Red
-    "G": (0, 255, 0),        # Green
-    "B": (0, 0, 255),        # Blue
-    "Y": (255, 255, 0),      # Yellow
+
+    # "G": (0, 255, 0),        # Green
+    # "B": (0, 0, 255),        # Blue
+    # "Y": (255, 255, 0),      # Yellow
     # "M": (255, 0, 255),      # Magenta
     # "C": (0, 255, 255),      # Cyan
-    # "W": (255, 255, 255),    # White
 }
 
 # Tetrimino Shapes
@@ -29,3 +30,23 @@ SHAPES = [
     [[1, 1, 1], [1, 0, 0]],  # L shape
     [[1, 1, 1], [0, 0, 1]]   # J shape
 ]
+
+whites = {
+    "whiteEarned": 0
+}
+
+def getColors():
+    """Getter for COLORS."""
+    return COLORS
+
+def setColors(key, value):
+    """Setter for COLORS to add or update color mappings."""
+    COLORS[key] = value
+
+def getWhite():
+    """Getter for whiteEarned."""
+    return whites["whiteEarned"]
+
+def setWhite(whiteCount):
+    """Setter for whiteEarned to update its value."""
+    whites["whiteEarned"] = whiteCount

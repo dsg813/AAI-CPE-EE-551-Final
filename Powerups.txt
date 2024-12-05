@@ -1,22 +1,26 @@
-# Red     - "burn" change all blocks bordering any red block to red
+# Red     - erase all blocks bordering the red cluster
 # Green   - supergravity down
-# Blue    - reduce the erase count requirement by 1 for the next 10 blocks
+# Blue    - erase all blue block
 # Yellow  - erase all square blocks
 # Magenta - all red and blue blocks turn magenta
 # Cyan    - supergravity right, then left
-# White   - clear the board. get white tiles by using power-ups
+# White   - beat the level. get white tiles by erasing blocks
+
+make a counter for number of erased blocks, and number of white blocks coming soon
 
 each level increases the number of colors by 1 (from 2 to 7 (maybe more?))
 
-levels are cleared by attaining a certain number of square or erased blocks
-powerups will be clickable icons that can be used as desired
+points are earned based on number of blocks it takes to get the clear. (golf points style)
+powerups activate automatically
 
 make animations for cool stuff happening
 
 add color weighting to tetriminos
 
 need menus.
-score is number of blocks erased
-go to next level after XX score
 instructions
 difficulty setting
+
+random.randint(1, len(COLORS) - 1) if cell else 0
+
+setBoard from outside the class includes a redraw

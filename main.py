@@ -1,8 +1,9 @@
 import pygame
 from game import Game
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, setWhite
 
 def main():
+    setWhite(0)
     pygame.init()
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Tetris")
@@ -45,6 +46,8 @@ def main():
         pygame.display.update()
 
     pygame.quit()
+
+
 
 if __name__ == "__main__":
     main()
