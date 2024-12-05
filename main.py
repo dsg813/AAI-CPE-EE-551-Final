@@ -1,9 +1,10 @@
 import pygame
 from game import Game
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, BLOCK_SIZE
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, setWhite, BLOCK_SIZE
 
 
 def main():
+    setWhite(0)
     pygame.init()
 
     # Screen dimensions for two boards
