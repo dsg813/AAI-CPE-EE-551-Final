@@ -23,6 +23,7 @@ class Tetrimino:
                     row.append(0)  # Empty cell
             self.shape.append(row)
 
+
     def rotate(self):
         # Rotate the Tetrimino shape 90 degrees clockwise
         self.shape = [list(row) for row in zip(*self.shape[::-1])]

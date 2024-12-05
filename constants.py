@@ -12,12 +12,6 @@ COLORS = {
     "0": (0, 0, 0),          # Background
     "W": (255, 255, 255),    # White
     "R": (255, 0, 0),        # Red
-
-    # "G": (0, 255, 0),        # Green
-    # "B": (0, 0, 255),        # Blue
-    # "Y": (255, 255, 0),      # Yellow
-    # "M": (255, 0, 255),      # Magenta
-    # "C": (0, 255, 255),      # Cyan
 }
 
 # Tetrimino Shapes

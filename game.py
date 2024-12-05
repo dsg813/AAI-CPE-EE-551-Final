@@ -6,11 +6,17 @@ from processBoard import updateFrame  # Import the renamed function
 
 class Game:
     def __init__(self):
-        self.grid = [["0"] * GRID_WIDTH for _ in range(GRID_HEIGHT)]  # Initialize with background "0"
+        self.grid = [["0"] * GRID_WIDTH for _ in range(GRID_HEIGHT)]
         self.shape_grid = [["circle" for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
         self.game_over = False
         self.score = 0
+        self.font = pygame.font.Font(None, 36)
+        self.offset_x = (SCREEN_WIDTH - GRID_WIDTH * BLOCK_SIZE) // 2
+        self.offset_y = (SCREEN_HEIGHT - GRID_HEIGHT * BLOCK_SIZE) // 2
+
+    def updateScore(self, newScore):
+        self.score += newScore
 
     def checkCollision(self, shape, offset_x, offset_y):
         for y in range(len(shape)):
@@ -24,7 +30,7 @@ class Game:
                         new_x < 0 or
                         new_x >= GRID_WIDTH or
                         new_y >= GRID_HEIGHT or
-                        self.grid[new_y][new_x] != "0"  # Check for non-background cells
+                        self.grid[new_y][new_x] != "0"
                     ):
                         return True
         return False
@@ -40,22 +46,29 @@ class Game:
                 cell = row[x]
                 if cell:
                     color_key = list(COLORS.keys())[cell]
-                    self.grid[self.current_mino.y + y][self.current_mino.x + x] = color_key
-                    self.shape_grid[self.current_mino.y + y][self.current_mino.x + x] = "circle"  # Set shape to circle
+                    self.grid[self.current_mino.y +
+                              y][self.current_mino.x + x] = color_key
+                    self.shape_grid[self.current_mino.y +
+                                    y][self.current_mino.x + x] = "circle"
 
-        # Process the board with update_check
-        board = self.getBoard()  # Extract the current board state
-        updated_board = updateFrame(board)  # Process the board
-        self.setBoard(updated_board)  # Apply the updated board state
+        board = self.getBoard()
+        updated_board, eliminated_blocks = updateFrame(board)
+
+        self.setBoard(updated_board)
+
+        self.updateScore(eliminated_blocks * 100)
+
 
         # Spawn a new Tetrimino
+
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
 
         # Update shape grid to "circle"
         for y in range(len(self.current_mino.shape)):
             for x in range(len(self.current_mino.shape[y])):
                 if self.current_mino.shape[y][x]:
-                    self.shape_grid[self.current_mino.y + y][self.current_mino.x + x] = "circle"
+                    self.shape_grid[self.current_mino.y +
+                                    y][self.current_mino.x + x] = "circle"
 
         # Check for game over condition
         if self.checkCollision(self.current_mino.shape, 0, 0):
@@ -78,51 +91,65 @@ class Game:
         else:
             self.lockMino(screen)
 
+
     def drawGrid(self, screen):
         COLORS = getColors()
+
+    def drawGrid(self, screen, offset_x=0):
+
         for y in range(len(self.grid)):
             row = self.grid[y]
             for x in range(len(row)):
                 color_key = row[x]
-                color = COLORS[color_key]  # Use the color dictionary with character keys
+                color = COLORS[color_key]
                 shape = self.shape_grid[y][x]
+                rect_x = offset_x + x * BLOCK_SIZE
+                rect_y = y * BLOCK_SIZE
+
                 if shape == "circle":
                     pygame.draw.circle(
                         screen,
                         color,
-                        (x * BLOCK_SIZE + BLOCK_SIZE // 2, y * BLOCK_SIZE + BLOCK_SIZE // 2),
+                        (rect_x + BLOCK_SIZE // 2, rect_y + BLOCK_SIZE // 2),
                         int(BLOCK_SIZE * 0.475),
                     )
                 elif shape == "square":
                     pygame.draw.rect(
                         screen,
                         color,
-                        (x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                        (rect_x, rect_y, BLOCK_SIZE, BLOCK_SIZE),
                     )
                 pygame.draw.rect(
                     screen,
                     (50, 50, 50),  # Gray color for the grid lines
-                    (x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                    (rect_x, rect_y, BLOCK_SIZE, BLOCK_SIZE),
                     1,
                 )
 
+
     def drawMino(self, screen):
         COLORS = getColors()
+
         for y in range(len(self.current_mino.shape)):
             row = self.current_mino.shape[y]
             for x in range(len(row)):
                 cell = row[x]
                 if cell:
-                    color_key = list(COLORS.keys())[cell]  # Get the corresponding key for this color
+                    color_key = list(COLORS.keys())[cell]
                     pygame.draw.circle(
                         screen,
                         COLORS[color_key],
                         (
-                            (self.current_mino.x + x) * BLOCK_SIZE + BLOCK_SIZE // 2,
+                            offset_x + (self.current_mino.x + x) * BLOCK_SIZE + BLOCK_SIZE // 2,
                             (self.current_mino.y + y) * BLOCK_SIZE + BLOCK_SIZE // 2,
                         ),
                         int(BLOCK_SIZE * 0.475)
                     )
+
+    def renderScore(self, screen, offset_x=0, offset_y=0):
+        """Renders the score with a given offset."""
+        score_surface = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        screen.blit(score_surface, (offset_x, offset_y))
 
     def getBoard(self):
         """Extracts the board state from the current game instance."""
@@ -149,7 +176,7 @@ class Game:
         for y in range(len(board)):
             for x in range(len(board[0])):
                 cell = board[y][x]
-                self.grid[y][x] = cell[0]  # Update the grid with the color code
+                self.grid[y][x] = cell[0]
                 if cell[1] == "C":
                     self.shape_grid[y][x] = "circle"
                 elif cell[1] == "S":
