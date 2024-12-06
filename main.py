@@ -1,10 +1,9 @@
 import pygame
 from game import Game
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, setWhite, BLOCK_SIZE
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, BLOCK_SIZE
 
 
 def main():
-    setWhite(0)
     pygame.init()
 
     # Screen dimensions for two boards
@@ -79,12 +78,12 @@ def main():
         separator_width = 5
         pygame.draw.rect(
             screen,
-            (255, 255, 255),
+            (255, 255, 255),  
             (
-                SCREEN_WIDTH - separator_width // 2,
-                0,
-                separator_width,
-                SCREEN_HEIGHT
+                SCREEN_WIDTH - separator_width // 2,  
+                0,                                  
+                separator_width,                   
+                SCREEN_HEIGHT                      
             )
         )
 

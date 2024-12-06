@@ -1,13 +1,14 @@
 import pygame
 from tetrimino import Tetrimino
-from constants import GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, getColors, getWhite, setWhite
+from constants import COLORS, GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, getColors, getWhite, setWhite
 from processBoard import updateFrame  # Import the renamed function
 
 
 class Game:
     def __init__(self):
         self.grid = [["0"] * GRID_WIDTH for _ in range(GRID_HEIGHT)]
-        self.shape_grid = [["circle" for _ in range(GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
+        self.shape_grid = [["circle" for _ in range(
+            GRID_WIDTH)] for _ in range(GRID_HEIGHT)]
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
         self.game_over = False
         self.score = 0
@@ -58,7 +59,6 @@ class Game:
 
         self.updateScore(eliminated_blocks * 100)
 
-
         # Spawn a new Tetrimino
 
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
@@ -90,7 +90,6 @@ class Game:
             self.current_mino.y += 1
         else:
             self.lockMino(screen)
-
 
     def drawGrid(self, screen):
         COLORS = getColors()
@@ -126,8 +125,7 @@ class Game:
                     1,
                 )
 
-
-    def drawMino(self, screen):
+    def drawMino(self, screen, offset_x=0):
         COLORS = getColors()
 
         for y in range(len(self.current_mino.shape)):
@@ -140,15 +138,18 @@ class Game:
                         screen,
                         COLORS[color_key],
                         (
-                            offset_x + (self.current_mino.x + x) * BLOCK_SIZE + BLOCK_SIZE // 2,
-                            (self.current_mino.y + y) * BLOCK_SIZE + BLOCK_SIZE // 2,
+                            offset_x + (self.current_mino.x + x) *
+                            BLOCK_SIZE + BLOCK_SIZE // 2,
+                            (self.current_mino.y + y) *
+                            BLOCK_SIZE + BLOCK_SIZE // 2,
                         ),
                         int(BLOCK_SIZE * 0.475)
                     )
 
     def renderScore(self, screen, offset_x=0, offset_y=0):
         """Renders the score with a given offset."""
-        score_surface = self.font.render(f"Score: {self.score}", True, (255, 255, 255))
+        score_surface = self.font.render(
+            f"Score: {self.score}", True, (255, 255, 255))
         screen.blit(score_surface, (offset_x, offset_y))
 
     def getBoard(self):
