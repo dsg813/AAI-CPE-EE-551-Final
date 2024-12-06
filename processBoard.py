@@ -209,6 +209,8 @@ def visionAlgorithm(board, target_color):
                     # Rebuild the 7-character code with the cluster label
                     board[y][x] = board[y][x][:2] + label_to_cluster_id[label] + board[y][x][4:]
 
+
+
     return board
 
 def contiguousCount(board):

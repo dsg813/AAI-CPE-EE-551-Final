@@ -12,6 +12,8 @@ class Game:
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
         self.game_over = False
         self.score = 0
+        self.level = 0
+        self.whitePoints = 0
         self.font = pygame.font.Font(None, 36)
         self.offset_x = (SCREEN_WIDTH - GRID_WIDTH * BLOCK_SIZE) // 2
         self.offset_y = (SCREEN_HEIGHT - GRID_HEIGHT * BLOCK_SIZE) // 2
@@ -147,10 +149,24 @@ class Game:
                     )
 
     def renderScore(self, screen, offset_x=0, offset_y=0):
-        """Renders the score with a given offset."""
         score_surface = self.font.render(
             f"Score: {self.score}", True, (255, 255, 255))
         screen.blit(score_surface, (offset_x, offset_y))
+
+    def renderLevel(self, screen, offset_x=0, offset_y=0):
+        level_surface = self.font.render(
+            f"Level: {self.level}", True, (255, 255, 255))
+        screen.blit(level_surface, (offset_x, offset_y))
+
+    def renderWhitePoints(self, screen, offset_x=0, offset_y=0):
+        white_point_surface = self.font.render(
+            f"White Points: {self.whitePoints}", True, (255, 255, 255))
+        screen.blit(white_point_surface, (offset_x, offset_y))
+
+    def renderRedRule(self, screen, offset_x=0, offset_y=0):
+        redRule_surface = self.font.render(
+            f"Rule: XXXXXXX", True, (255, 255, 255))
+        screen.blit(redRule_surface, (offset_x, offset_y))
 
     def getBoard(self):
         """Extracts the board state from the current game instance."""
