@@ -1,5 +1,5 @@
 from constants import (SQUARE_REQ, EMPTY_REQ, GRID_WIDTH, GRID_HEIGHT,
-                       setWhite, getWhite, setColors, getColors)
+                       setWhite, getWhite, setColors, getColors, get_boardStateList, set_boardStateList)
 
 
 # Terminal color codes
@@ -48,6 +48,13 @@ def updateFrame(board):
     Updates the game state frame by frame, processing the board based on game physics
     """
     Eliminated_Total_Blocks = 0
+
+    # Reset boardStateList
+    set_boardStateList([])  # Clear the existing board states
+
+    # Add the initial board state to boardStateList
+    appendBoardList(board)
+
     try:
 
         # print("Initial board state extracted from the game:")
@@ -119,6 +126,8 @@ def updateFrame(board):
 
 
         # Update the game state at the end
+
+        appendBoardList(board)
 
         return board, Eliminated_Total_Blocks
 
@@ -320,8 +329,12 @@ def squareChanger(board):
                     if cluster_size >= SQUARE_REQ and cell[1] == "C":  # Check for 'S' and size condition
                         board[y][x] = cell[0] + "S" + cell[2:]  # Change 'S' to 'C'
                         has_changes = True
+                        appendBoardList(board)
                 except ValueError:
                     print(f"Invalid cluster size in cell {cell} at ({y}, {x}). Skipping.")
+    if has_changes == True:
+        setWhite(getWhite()+1)
+
     return board, has_changes
 
 
@@ -376,6 +389,7 @@ def gravityChanger(board):
                 board[y + 1][x] = cell  # Move the cell down
                 board[y][x] = "0000-00"  # Clear the current cell
                 has_changes = True
+                appendBoardList(board)
 
     return board, has_changes
 
@@ -424,9 +438,9 @@ def redErase(board):
     Mark adjacent cells (up, down, left, right) with a modified cluster ID (red_erase_expanded_ID),
     and then erase all matching cells.
     """
-    print("Red power-up activated: Erasing blocks bordering red clusters of size 8+.")
-    print("Board state before starting:")
-    printToTerminal(board)
+    # print("Red power-up activated: Erasing blocks bordering red clusters of size 8+.")
+    # print("Board state before starting:")
+    # printToTerminal(board)
 
     # Step 1: Search for the first red cluster of size 8+
     red_erase_ID = None
@@ -445,8 +459,8 @@ def redErase(board):
 
     # Step 2: Generate the expanded cluster ID
     red_erase_expanded_ID = red_erase_ID[:4] + "^" + red_erase_ID[5:]
-    print(f"Red cluster ID to erase: {red_erase_ID}")
-    print(f"Expanded red cluster ID: {red_erase_expanded_ID}")
+    # print(f"Red cluster ID to erase: {red_erase_ID}")
+    # print(f"Expanded red cluster ID: {red_erase_expanded_ID}")
 
     # Step 3: Mark adjacent cells (up, down, left, right) with the expanded ID
     for y in range(len(board)):
@@ -456,34 +470,43 @@ def redErase(board):
                 if (y + 1 < GRID_HEIGHT and board[y + 1][x] != red_erase_ID
                         and board[y + 1][x][0] != "0" and board[y + 1][x][0] != "W"):
                     board[y + 1][x] = red_erase_expanded_ID
+                    appendBoardList(board)
                 # Check above
                 if (y - 1 >= 0 and board[y - 1][x] != red_erase_ID
                         and board[y - 1][x][0] != "0" and board[y - 1][x][0] != "W"):
                     board[y - 1][x] = red_erase_expanded_ID
+                    appendBoardList(board)
                 # Check to the right
                 if (x + 1 < GRID_WIDTH and board[y][x + 1] != red_erase_ID
                         and board[y][x + 1][0] != "0" and board[y][x + 1][0] != "W"):
                     board[y][x + 1] = red_erase_expanded_ID
+                    appendBoardList(board)
                 # Check to the left
                 if (x - 1 >= 0 and board[y][x - 1] != red_erase_ID
                         and board[y][x - 1][0] != "0" and board[y][x - 1][0] != "W"):
                     board[y][x - 1] = red_erase_expanded_ID
+                    appendBoardList(board)
 
     # Step 4: Print the board state after marking adjacent cells
-    print("Board after marking adjacent cells:")
-    printToTerminal(board)
+    # print("Board after marking adjacent cells:")
+    # printToTerminal(board)
 
     # Step 5: Erase all cells matching red_erase_ID or red_erase_expanded_ID
     for y in range(len(board)):
         for x in range(len(board[0])):
             if board[y][x] in (red_erase_ID, red_erase_expanded_ID):
                 board[y][x] = "0000-00"
+                appendBoardList(board)
 
     # Step 6: Print the final board state
-    print("Board after red power-up:")
-    printToTerminal(board)
+    # print("Board after red power-up:")
+    # printToTerminal(board)
 
-    addWhite()
+
+    # boardStateList = get_boardStateList()
+    # for i in range(len(boardStateList)):
+    #     print(f"\nBoard State {i}:")
+    #     printToTerminal(boardStateList[i])  # Print the board in color
 
     return board
 
@@ -491,9 +514,9 @@ def greenErase(board):
     """
     Erase the first detected green cluster, then apply supergravity column by column.
     """
-    print("Green power-up activated: Erasing first detected green cluster and applying supergravity.")
-    print("Board before green power-up:")
-    printToTerminal(board)
+    # print("Green power-up activated: Erasing first detected green cluster and applying supergravity.")
+    # print("Board before green power-up:")
+    # printToTerminal(board)
 
     # Define rows and cols for reuse
     rows = len(board)
@@ -510,16 +533,17 @@ def greenErase(board):
         if green_erase_ID:
             break
 
-    print(f"Green cluster ID to erase: {green_erase_ID}")
+    # print(f"Green cluster ID to erase: {green_erase_ID}")
 
     # Step 2: Erase all cells matching green_erase_ID
     for y in range(rows):
         for x in range(cols):
             if board[y][x] == green_erase_ID:
                 board[y][x] = "0000-00"
+                appendBoardList(board)
 
-    print("Board after erasing green cluster:")
-    printToTerminal(board)
+    # print("Board after erasing green cluster:")
+    # printToTerminal(board)
 
     # Step 3: Apply supergravity
     for col in range(cols):  # Iterate through each column
@@ -531,19 +555,19 @@ def greenErase(board):
                 # Move all cells above down by one
                 for above_row in range(row - 1, -1, -1):  # From row above to the top
                     board[above_row + 1][col] = board[above_row][col]
+                    appendBoardList(board)
                 board[0][col] = "0000-00"  # Clear the top cell after shifting
 
                 # Recheck the same row (reset if it is now filled)
                 if board[row][col] != "0000-00":
                     break
 
-    print("Board after applying supergravity:")
-    printToTerminal(board)
+    # print("Board after applying supergravity:")
+    # printToTerminal(board)
+    #
+    # print("Board after green power-up:")
+    # printToTerminal(board)
 
-    print("Board after green power-up:")
-    printToTerminal(board)
-
-    addWhite()
 
     return board
 
@@ -552,19 +576,19 @@ def blueErase(board):
     """
     Erase all blue cells
     """
-    print("Blue power-up activated: Erasing all blue clusters.")
-    print("Board before blue power-up:")
-    printToTerminal(board)
+    # print("Blue power-up activated: Erasing all blue clusters.")
+    # print("Board before blue power-up:")
+    # printToTerminal(board)
 
     for y in range(len(board)):
         for x in range(len(board[0])):
             if board[y][x][0] == 'B':  # Blue blocks
                 board[y][x] = "0000-00"
+                appendBoardList(board)
 
-    print("Board after blue power-up:")
-    printToTerminal(board)
+    # print("Board after blue power-up:")
+    # printToTerminal(board)
 
-    addWhite()
 
     return board
 
@@ -573,9 +597,9 @@ def yellowErase(board):
     """
     Erase the first detected yellow cluster of size 8+, then erase all square blocks.
     """
-    print("Yellow power-up activated: Erasing first detected yellow cluster and all square blocks.")
-    print("Board before yellow power-up:")
-    printToTerminal(board)
+    # print("Yellow power-up activated: Erasing first detected yellow cluster and all square blocks.")
+    # print("Board before yellow power-up:")
+    # printToTerminal(board)
 
     # Step 1: Identify the first yellow cluster of size 8+
     cluster_code = None
@@ -593,9 +617,11 @@ def yellowErase(board):
                 cell = board[y][x]
                 if cell[0] == 'Y' and cell[2:4] == cluster_code:  # Match cluster code
                     board[y][x] = "0000-00"
+                    appendBoardList(board)
 
-    print("Board after erasing yellow cluster:")
-    printToTerminal(board)
+
+    # print("Board after erasing yellow cluster:")
+    # printToTerminal(board)
 
     # Step 3: Erase all square blocks
     for y in range(len(board)):
@@ -603,11 +629,11 @@ def yellowErase(board):
             cell = board[y][x]
             if cell[:4] != "0000" and cell[1] == 'S':  # Non-empty and square
                 board[y][x] = "0000-00"
+                appendBoardList(board)
 
-    print("Board after yellow power-up:")
-    printToTerminal(board)
+    # print("Board after yellow power-up:")
+    # printToTerminal(board)
 
-    addWhite()
 
     return board
 
@@ -618,9 +644,9 @@ def magentaErase(board):
     Change all red and blue cells to magenta, rerun the processBoard algorithm if changes are made,
     and erase the first detected magenta cluster of size 8+.
     """
-    print("Magenta power-up activated: Changing red and blue cells to magenta and processing clusters.")
-    print("Board before magenta power-up:")
-    printToTerminal(board)
+    # print("Magenta power-up activated: Changing red and blue cells to magenta and processing clusters.")
+    # print("Board before magenta power-up:")
+    # printToTerminal(board)
 
     # Step 1: Set the `changed` flag and modify the board
     for y in range(len(board)):
@@ -628,21 +654,22 @@ def magentaErase(board):
             cell = board[y][x]
             if cell[0] in ('R', 'B'):  # Red or blue blocks
                 board[y][x] = 'M' + cell[1:]  # Change to magenta
+                appendBoardList(board)
 
-    print("Board after changing red and blue cells to magenta:")
-    printToTerminal(board)
+    # print("Board after changing red and blue cells to magenta:")
+    # printToTerminal(board)
 
     # Step 2: Rerun processBoard logic if changes were made
     board = contiguousID(board)
-    print("Board (M) with contiguous regions identified:")
-    printToTerminal(board)
+    # print("Board (M) with contiguous regions identified:")
+    # printToTerminal(board)
 
     board = contiguousCount(board)
-    print("Board (M) with contiguous region sizes:")
-    printToTerminal(board)
-
-    print("Board after rerunning processBoard logic:")
-    printToTerminal(board)
+    # print("Board (M) with contiguous region sizes:")
+    # printToTerminal(board)
+    #
+    # print("Board after rerunning processBoard logic:")
+    # printToTerminal(board)
 
     # Step 3: Erase the first detected magenta cluster of size 8+
     cluster_code = None
@@ -659,11 +686,11 @@ def magentaErase(board):
                 cell = board[y][x]
                 if cell[0] == 'M' and cell[2:4] == cluster_code:  # Match cluster code
                     board[y][x] = "0000-00"
+                    appendBoardList(board)
 
-    print("Board after erasing magenta cluster:")
-    printToTerminal(board)
+    # print("Board after erasing magenta cluster:")
+    # printToTerminal(board)
 
-    addWhite()
 
     return board
 
@@ -671,9 +698,9 @@ def cyanErase(board):
     """
     Erase the first detected cyan cluster of size 8+, then apply supergravity to the right.
     """
-    print("Cyan power-up activated: Erasing first detected cyan cluster and applying supergravity to the right.")
-    print("Board before cyan power-up:")
-    printToTerminal(board)
+    # print("Cyan power-up activated: Erasing first detected cyan cluster and applying supergravity to the right.")
+    # print("Board before cyan power-up:")
+    # printToTerminal(board)
 
     # Define rows and cols for reuse
     rows = len(board)
@@ -695,9 +722,10 @@ def cyanErase(board):
         for x in range(cols):
             if board[y][x] == cyan_erase_ID:
                 board[y][x] = "0000-00"
+                appendBoardList(board)
 
-    print("Board after erasing cyan cluster:")
-    printToTerminal(board)
+    # print("Board after erasing cyan cluster:")
+    # printToTerminal(board)
 
     # Step 3: Apply supergravity to the right
     for row in range(rows):  # Iterate through each row
@@ -709,16 +737,16 @@ def cyanErase(board):
                 # Move all cells to the right by one
                 for left_col in range(col - 1, -1, -1):  # From the current column to the leftmost column
                     board[row][left_col + 1] = board[row][left_col]
+                    appendBoardList(board)
                 board[row][0] = "0000-00"  # Clear the leftmost cell after shifting
 
                 # Recheck the same column (reset if it is now filled)
                 if board[row][col] != "0000-00":
                     break
 
-    print("Board after cyan power-up:")
-    printToTerminal(board)
+    # print("Board after cyan power-up:")
+    # printToTerminal(board)
 
-    addWhite()
 
     return board
 
@@ -726,16 +754,17 @@ def whiteErase(board):
     """
     Set all blocks to empty.
     """
-    print("White power-up activated: Clearing the entire board.")
-    print("Board before white power-up:")
-    printToTerminal(board)
+    # print("White power-up activated: Clearing the entire board.")
+    # print("Board before white power-up:")
+    # printToTerminal(board)
 
     for y in range(len(board)):
         for x in range(len(board[0])):
             board[y][x] = "0000-00"
+            appendBoardList(board)
 
-    print("Board after white power-up:")
-    printToTerminal(board)
+    # print("Board after white power-up:")
+    # printToTerminal(board)
 
 
     setWhite(0)
@@ -760,3 +789,9 @@ def addWhite():
     print(f"{getWhite()} white circles coming")
     if getWhite() > 0 and "W" not in getColors():
         setColors("W", (255, 255, 255))
+
+def appendBoardList(board):
+    # Add the initial board state to boardStateList
+    boardStateList = get_boardStateList()
+    boardStateList.append([row[:] for row in board])  # Append the copy to the list
+    set_boardStateList(boardStateList)  # Update the state

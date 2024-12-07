@@ -29,6 +29,32 @@ whites = {
     "whiteEarned": 0
 }
 
+whitePoints = 0  # Initialize whitePoints
+
+def getWhite():
+    global whitePoints
+    return whitePoints
+
+def setWhite(value):
+    global whitePoints
+    whitePoints = value
+
+boardStateList = []
+
+def get_boardStateList():
+    """
+    Getter function for boardStateList.
+    """
+    global boardStateList
+    return boardStateList
+
+def set_boardStateList(new_list):
+    """
+    Setter function for boardStateList.
+    """
+    global boardStateList
+    boardStateList = new_list
+
 def getColors():
     """Getter for COLORS."""
     return COLORS
