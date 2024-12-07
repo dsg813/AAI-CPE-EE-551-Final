@@ -15,9 +15,9 @@ class Tetrimino:
             for x in range(len(raw_shape[0])):
                 if raw_shape[y][x]:  # If part of the Tetrimino
                     color_index = random.randint(2, len(COLORS) - 1)
-                    if getWhite() > 0:
+                    if getWhite() > 7:
                         color_index = 1
-                        setWhite(getWhite()-1)
+                        setWhite(getWhite()-8)
                     row.append(color_index)
                 else:
                     row.append(0)  # Empty cell

@@ -1,7 +1,8 @@
 import pygame
 from tetrimino import Tetrimino
-from constants import COLORS, GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, getColors, getWhite, setWhite
+from constants import COLORS, GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, getColors, get_boardStateList
 from processBoard import updateFrame  # Import the renamed function
+import time
 
 
 class Game:
@@ -148,25 +149,60 @@ class Game:
                         int(BLOCK_SIZE * 0.475)
                     )
 
-    def renderScore(self, screen, offset_x=0, offset_y=0):
-        score_surface = self.font.render(
-            f"Score: {self.score}", True, (255, 255, 255))
-        screen.blit(score_surface, (offset_x, offset_y))
+    def forceSpawnNewMino(self):
+        """Forcefully spawns a new Tetrimino and updates the game state."""
+        # Spawn a new Tetrimino
+        self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
 
-    def renderLevel(self, screen, offset_x=0, offset_y=0):
-        level_surface = self.font.render(
-            f"Level: {self.level}", True, (255, 255, 255))
-        screen.blit(level_surface, (offset_x, offset_y))
+        # Update shape grid to "circle"
+        for y in range(len(self.current_mino.shape)):
+            for x in range(len(self.current_mino.shape[y])):
+                if self.current_mino.shape[y][x]:
+                    self.shape_grid[self.current_mino.y + y][self.current_mino.x + x] = "circle"
 
-    def renderWhitePoints(self, screen, offset_x=0, offset_y=0):
-        white_point_surface = self.font.render(
-            f"White Points: {self.whitePoints}", True, (255, 255, 255))
-        screen.blit(white_point_surface, (offset_x, offset_y))
+        # Check for game over condition
+        if self.checkCollision(self.current_mino.shape, 0, 0):
+            self.game_over = True
 
-    def renderRedRule(self, screen, offset_x=0, offset_y=0):
-        redRule_surface = self.font.render(
-            f"Rule: XXXXXXX", True, (255, 255, 255))
-        screen.blit(redRule_surface, (offset_x, offset_y))
+        print("Debug: New Tetrimino forcefully spawned")
+
+    # def renderScore(self, screen, offset_x=0, offset_y=0):
+    #     score_surface = self.font.render(
+    #         f"Score: {self.score}", True, (255, 255, 255))
+    #     screen.blit(score_surface, (offset_x, offset_y))
+    #
+    # def renderLevel(self, screen, offset_x=0, offset_y=0):
+    #     level_surface = self.font.render(
+    #         f"Level: {self.level}", True, (255, 255, 255))
+    #     screen.blit(level_surface, (offset_x, offset_y))
+    #
+    # def renderWhitePoints(self, screen, offset_x=0, offset_y=0):
+    #     white_point_surface = self.font.render(
+    #         f"White Points: {self.whitePoints}", True, (255, 255, 255))
+    #     screen.blit(white_point_surface, (offset_x, offset_y))
+    #
+    # def renderRedRule(self, screen, offset_x=0, offset_y=0):
+    #     redRule_surface = self.font.render(
+    #         f"Rule: XXXXXXX", True, (255, 255, 255))
+    #     screen.blit(redRule_surface, (offset_x, offset_y))
+
+    def renderText(self, screen, text, offset_x=0, initial_offset_y=0, line_spacing=30):
+        """
+        Renders multiple lines of text on the screen.
+
+        Args:
+            screen (pygame.Surface): The surface to render on.
+            text (str): The text to render, with lines separated by '\n'.
+            offset_x (int): X offset for the text position.
+            initial_offset_y (int): Y offset for the first line of text.
+            line_spacing (int): Vertical spacing between lines.
+        """
+        lines = text.split("\n")
+        y_offset = initial_offset_y
+        for line in lines:
+            text_surface = self.font.render(line, True, (255, 255, 255))
+            screen.blit(text_surface, (offset_x, y_offset))
+            y_offset += line_spacing
 
     def getBoard(self):
         """Extracts the board state from the current game instance."""
