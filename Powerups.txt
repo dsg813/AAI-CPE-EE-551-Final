@@ -6,21 +6,15 @@
 # Cyan    - supergravity right, then left
 # White   - beat the level. get white tiles by erasing blocks
 
-make a counter for number of erased blocks, and number of white blocks coming soon
-
-each level increases the number of colors by 1 (from 2 to 7 (maybe more?))
-
 points are earned based on number of blocks it takes to get the clear. (golf points style)
 powerups activate automatically
 
-make animations for cool stuff happening
-
 add color weighting to tetriminos
 
-need menus.
+need menus
 instructions
 difficulty setting
-
-random.randint(1, len(COLORS) - 1) if cell else 0
-
-setBoard from outside the class includes a redraw
+high score
+tetrimino block counter
+more blink steps for combos
+pytest

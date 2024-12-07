@@ -627,7 +627,7 @@ def yellowErase(board):
     for y in range(len(board)):
         for x in range(len(board[0])):
             cell = board[y][x]
-            if cell[:4] != "0000" and cell[1] == 'S':  # Non-empty and square
+            if cell[:4] != "0000" and cell[1] == 'S' and cell[0] != 'W':  # Non-empty and square
                 board[y][x] = "0000-00"
                 appendBoardList(board)
 

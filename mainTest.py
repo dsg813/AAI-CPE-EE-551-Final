@@ -83,8 +83,8 @@ def display_board_states(screen, game):
 
     # Update the white points using setWhite
     setWhite(getWhite() + points_earned)
-    print(f"Points Earned During Animation: {points_earned}")
-    print(f"New White Score: {getWhite()}")
+    # print(f"Points Earned During Animation: {points_earned}")
+    # print(f"New White Score: {getWhite()}")
 
     # Adjust delays for smaller boardStateLists
     if len(boardStateList) < 8:
@@ -94,14 +94,14 @@ def display_board_states(screen, game):
 
     # Speed up if all changes are C-to-S
     if all_changes_c_to_s(boardStateList):
-        print("All changes are C-to-S; running twice as fast")
+        # print("All changes are C-to-S; running twice as fast")
         INITIAL_FRAME_DELAY //= 2
         FRAME_DELAY //= 2
         BLINK_DELAY //= 2
 
     # If there are 2 or fewer states, instantly redraw the final frame and exit
     if len(boardStateList) <= 2:
-        print("Redrawing Final Frame Instantly (Frame Count <= 2)")
+        # print("Redrawing Final Frame Instantly (Frame Count <= 2)")
         redraw_game_state(screen, game, boardStateList[-1])
         set_boardStateList([])  # Clear the list
         return
@@ -113,9 +113,9 @@ def display_board_states(screen, game):
             latest_c_to_s_index = i
 
     # Draw all frames up to the latest C-to-S change
-    print("Drawing all frames up to the latest C-to-S change")
+    # print("Drawing all frames up to the latest C-to-S change")
     for i, board_state in enumerate(boardStateList[:latest_c_to_s_index + 1]):
-        print(f"Displaying Board State {i}")
+        # print(f"Displaying Board State {i}")
 
         # Redraw and delay
         redraw_game_state(screen, game, board_state)
@@ -123,7 +123,7 @@ def display_board_states(screen, game):
 
     # Blink between frame 0, latest C-to-S change frame, and final frame
     if latest_c_to_s_index > 0:
-        print("Blinking between Initial, Latest C-to-S, and Final Frame")
+        # print("Blinking between Initial, Latest C-to-S, and Final Frame")
         for _ in range(2):  # Blink twice
             # Show the initial frame
             redraw_game_state(screen, game, boardStateList[0])
@@ -138,16 +138,16 @@ def display_board_states(screen, game):
             pygame.time.delay(BLINK_DELAY)
 
     # Ensure we end with the final frame
-    print("Ending on Final Frame")
+    # print("Ending on Final Frame")
     redraw_game_state(screen, game, boardStateList[-1])
 
     # Clear `boardStateList` after displaying all states
     set_boardStateList([])
-    print("Debug: boardStateList cleared")
+    # print("Debug: boardStateList cleared")
 
     # Force a new tetrimino spawn to handle premature spawns
     game.forceSpawnNewMino()
-    print("Forced spawn of new tetrimino to reset premature spawn")
+    # print("Forced spawn of new tetrimino to reset premature spawn")
 
 
 
@@ -167,6 +167,8 @@ def construct_text_to_display(game, white_points, white_cells):
         f"White Points: {white_points}\n"
         f"White Cells Earned: {white_cells}\n"
         f"8 points per cell\n"
+        f"8 red burns nearby cells\n"
+        f"8 white goes to next level\n"
     )
 
 
