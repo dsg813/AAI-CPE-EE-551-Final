@@ -134,18 +134,15 @@ def display_board_states(screen, game):
 def construct_text_to_display(game, white_points, white_cells):
     """
     Constructs the f-string for dynamic text display.
-
-    :param game: The current Game instance
-    :param white_points: Updated white points after animation
-    :param white_cells: White cells earned (integer division of white points by 8)
-    :return: A formatted string for rendering
     """
+    # f"Score: {game.score}\n"
     return (
-        f"Score: {game.score}\n"
         f"Block Count: {getMinos()}\n"
         f"Level: {len(COLORS)-2}\n"
         f"White Points: {white_points}\n"
         f"White Cells Earned: {white_cells}\n"
+        
+        f"\n"
         f"Color powers at 8 matching\n"
         f"Red: Expand then pop\n"
         f"Green: Pop then supergravity\n"
@@ -154,13 +151,18 @@ def construct_text_to_display(game, white_points, white_cells):
         f"Blue to Magenta then pop\n"
         f"Cyan: Pop then supergravity right\n"
         f"White: Clear board, next level\n"
+
+        f"\n"
+        f"Supergravity ignores connections\n"
+        f"blocks will \"fall\" to the lowest\n"
+        f"unoccupied cell"
     )
 
 def main():
     pygame.init()
 
     # Screen dimensions for a single board
-    screen = pygame.display.set_mode((SCREEN_WIDTH + 300, SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH + 450, SCREEN_HEIGHT))
     pygame.display.set_caption("Tetris")
     clock = pygame.time.Clock()
 
