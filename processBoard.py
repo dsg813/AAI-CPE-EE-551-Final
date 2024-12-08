@@ -1,6 +1,7 @@
 from constants import (SQUARE_REQ, EMPTY_REQ, GRID_WIDTH, GRID_HEIGHT,
                        setWhite, getWhite, setColors, getColors, get_boardStateList, set_boardStateList, boardStateList)
-
+import re
+import os
 
 # Terminal color codes
 COLOR_CODES = {
@@ -60,8 +61,22 @@ def updateFrame(board):
 
     try:
 
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # board = overwriteBoard()
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+        # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
+
         # print("Initial board state extracted from the game:")
         # printToTerminal(board)
+
+
 
         board, erase_changed, square_changed, eliminated_blocks = updateCodes(board)
 
@@ -798,3 +813,41 @@ def appendBoardList(board):
     boardStateList = get_boardStateList()
     boardStateList.append([row[:] for row in board])  # Append the copy to the list
     set_boardStateList(boardStateList)  # Update the state
+
+
+def overwriteBoard():
+    """Overwrite the board state by reading the first valid CSV file and updating colors."""
+    # Expand the COLORS dictionary
+    setColors("G", (0, 255, 0))
+    setColors("B", (0, 0, 255))
+    setColors("Y", (255, 255, 0))
+    setColors("M", (255, 0, 255))
+    setColors("C", (0, 255, 255))
+
+    # Folder containing test cases
+    TEST_CASES_FOLDER = "Test Cases CSVs"
+
+    # Filename pattern: starts with a 2-digit number followed by any text, ends in .csv
+    FILENAME_PATTERN = r"^\d{2}.*\.csv$"
+
+    # Check if the folder exists
+    if not os.path.exists(TEST_CASES_FOLDER):
+        print(f"Error: Folder '{TEST_CASES_FOLDER}' does not exist.")
+        return None
+
+    # Find the first matching file in the folder
+    for filename in os.listdir(TEST_CASES_FOLDER):
+        if re.match(FILENAME_PATTERN, filename):
+            filepath = os.path.join(TEST_CASES_FOLDER, filename)
+            try:
+                # Read the board from the file
+                with open(filepath, "r") as file:
+                    board = [line.strip().split(",") for line in file]
+                print(f"Successfully loaded board from {filepath}")
+                return board
+            except Exception as e:
+                print(f"Error reading file '{filepath}': {e}")
+                return None
+
+    print(f"No test case files matching pattern '{FILENAME_PATTERN}' found.")
+    return None

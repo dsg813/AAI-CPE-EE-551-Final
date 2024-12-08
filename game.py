@@ -1,8 +1,7 @@
 import pygame
 from tetrimino import Tetrimino
-from constants import COLORS, GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, getColors, get_boardStateList
+from constants import COLORS, GRID_WIDTH, GRID_HEIGHT, BLOCK_SIZE, SCREEN_HEIGHT, SCREEN_WIDTH, getColors, getMinos, setMinos
 from processBoard import updateFrame  # Import the renamed function
-import time
 
 
 class Game:
@@ -54,6 +53,8 @@ class Game:
                               y][self.current_mino.x + x] = color_key
                     self.shape_grid[self.current_mino.y +
                                     y][self.current_mino.x + x] = "circle"
+
+        setMinos(getMinos()+1)
 
         board = self.getBoard()
         updated_board, eliminated_blocks = updateFrame(board)
@@ -164,7 +165,7 @@ class Game:
         if self.checkCollision(self.current_mino.shape, 0, 0):
             self.game_over = True
 
-        print("Debug: New Tetrimino forcefully spawned")
+        # print("Debug: New Tetrimino forcefully spawned")
 
     # def renderScore(self, screen, offset_x=0, offset_y=0):
     #     score_surface = self.font.render(
@@ -189,13 +190,6 @@ class Game:
     def renderText(self, screen, text, offset_x=0, initial_offset_y=0, line_spacing=30):
         """
         Renders multiple lines of text on the screen.
-
-        Args:
-            screen (pygame.Surface): The surface to render on.
-            text (str): The text to render, with lines separated by '\n'.
-            offset_x (int): X offset for the text position.
-            initial_offset_y (int): Y offset for the first line of text.
-            line_spacing (int): Vertical spacing between lines.
         """
         lines = text.split("\n")
         y_offset = initial_offset_y

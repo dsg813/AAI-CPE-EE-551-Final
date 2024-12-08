@@ -25,9 +25,7 @@ SHAPES = [
     [[1, 1, 1], [0, 0, 1]]   # J shape
 ]
 
-whites = {
-    "whiteEarned": 0
-}
+whites = {"whiteEarned": 0}
 
 whitePoints = 0  # Initialize whitePoints
 
@@ -38,6 +36,16 @@ def getWhite():
 def setWhite(value):
     global whitePoints
     whitePoints = value
+
+minosUsed = 1  # Initialize block counter
+
+def getMinos():
+    global minosUsed
+    return minosUsed
+
+def setMinos(value):
+    global minosUsed
+    minosUsed = value
 
 boardStateList = []
 

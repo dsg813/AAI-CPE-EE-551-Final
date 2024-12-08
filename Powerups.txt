@@ -13,14 +13,5 @@ instructions
 difficulty setting
 high score
 tetrimino block counter
-more blink steps for combos
 pytest
-humanize mainTest
-change c to s detection
-c to s only detection
-use initial and final states
-save critical values for blinking
-blink through all critical values
 k-k-k-combo!
-points earned in current animation
-erase sequence was removed. fix that
