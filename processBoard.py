@@ -1,5 +1,5 @@
 from constants import (SQUARE_REQ, EMPTY_REQ, GRID_WIDTH, GRID_HEIGHT,
-                       setWhite, getWhite, setColors, getColors, get_boardStateList, set_boardStateList)
+                       setWhite, getWhite, setColors, getColors, get_boardStateList, set_boardStateList, boardStateList)
 
 
 # Terminal color codes
@@ -25,6 +25,9 @@ def updateCodes(board):
     board = contiguousCount(board)
     # print("Board with contiguous region sizes:")
     # printToTerminal(board)
+
+    if len(boardStateList) == 0:
+        appendBoardList(board)
 
     board, square_changed = squareChanger(board)
     # if square_changed:
@@ -53,7 +56,7 @@ def updateFrame(board):
     set_boardStateList([])  # Clear the existing board states
 
     # Add the initial board state to boardStateList
-    appendBoardList(board)
+
 
     try:
 
@@ -61,6 +64,8 @@ def updateFrame(board):
         # printToTerminal(board)
 
         board, erase_changed, square_changed, eliminated_blocks = updateCodes(board)
+
+
 
         Eliminated_Total_Blocks += eliminated_blocks
 
@@ -760,14 +765,12 @@ def whiteErase(board):
 
     for y in range(len(board)):
         for x in range(len(board[0])):
-            board[y][x] = "0000-00"
-            appendBoardList(board)
+            if board[y][x] != "0000-00":
+                board[y][x] = "0000-00"
+                appendBoardList(board)
 
     # print("Board after white power-up:")
     # printToTerminal(board)
-
-
-    setWhite(0)
 
     COLORS = getColors()
 

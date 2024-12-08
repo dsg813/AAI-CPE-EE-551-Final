@@ -7,9 +7,6 @@
 # White   - beat the level. get white tiles by erasing blocks
 
 points are earned based on number of blocks it takes to get the clear. (golf points style)
-powerups activate automatically
-
-add color weighting to tetriminos
 
 need menus
 instructions
@@ -18,3 +15,12 @@ high score
 tetrimino block counter
 more blink steps for combos
 pytest
+humanize mainTest
+change c to s detection
+c to s only detection
+use initial and final states
+save critical values for blinking
+blink through all critical values
+k-k-k-combo!
+points earned in current animation
+erase sequence was removed. fix that
