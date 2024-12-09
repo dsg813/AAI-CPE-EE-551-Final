@@ -1,14 +1,17 @@
+# Enhanced Tetris Game (Pygame)
 
-# Tetris Game (Pygame)
-
-This is a Tetris game implemented using Python and Pygame. The project adheres to the standard Tetris rules, allowing users to control falling Tetriminos with the keyboard.
+A dynamic and enriched take on the traditional Tetris game, this project introduces gameplay mechanics, board analysis, and unique power-up features, all implemented using Python and Pygame.
 
 ## Features
 
-- Fully functional Tetris gameplay.
-- Controls for moving, rotating, and dropping Tetriminos.
-- Line clearing and scoring.
-- Game over detection.
+- **Classic Tetris Gameplay**: Play with familiar controls for moving, rotating, and dropping Tetriminos.
+- **Enhanced Mechanics**:
+  - Dynamic scoring based on advanced board state analysis.
+  - Special block interactions and cluster-based actions.
+- **Power-ups**:
+  - Unique power-up effects based on cluster sizes, introducing strategic depth.
+- **Interactive Display**: Visual tracking of game state and key events.
+- **Custom Game Logic**: Sophisticated mechanics like contiguous block detection, gravity application, and cluster management.
 
 ## Table of Contents
 
@@ -16,9 +19,9 @@ This is a Tetris game implemented using Python and Pygame. The project adheres t
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
-- [File Structure](#file-structure)
+- [Code](#code)
+- [Power-ups and Scoring](#power-ups-and-scoring)
 - [Controls](#controls)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Requirements
@@ -32,7 +35,7 @@ This is a Tetris game implemented using Python and Pygame. The project adheres t
 
    ```bash
    git clone https://github.com/hogan-tech/AAI-CPE-EE-551-Final
-   cd AAI-CPE-EE-551-FINAL
+   cd AAI-CPE-EE-551-Final
    ```
 
 2. Install the required dependencies:
@@ -56,12 +59,14 @@ This is a Tetris game implemented using Python and Pygame. The project adheres t
 ## File Structure
 
 ```
-tetris-pygame/
-├── main.py         # Main script to run the game
-├── game.py         # Game logic and grid management
-├── tetrimino.py    # Tetrimino shapes and movement logic
-├── constants.py    # Constants and configuration
-├── README.md       # Project documentation (this file)
+tetris-advanced/
+├── main.py             # Entry point to run the game
+├── game.py             # Core game logic and state management
+├── tetrimino.py        # Tetrimino definitions and movement logic
+├── constants.py        # Game constants and shared configurations
+├── processBoard.py     # Advanced board analysis and mechanics
+├── README.md           # Project documentation
+└── Test Cases CSVs/    # Test cases for board states (optional)
 ```
 
 ### Summary of Files
@@ -69,6 +74,23 @@ tetris-pygame/
 - **`game.py`**: Manages the game state, grid, and interactions.
 - **`tetrimino.py`**: Handles the Tetrimino shapes, colors, and rotations.
 - **`constants.py`**: Stores constants like grid size, colors, and shapes.
+- **`processBoard.py`**: Implements algorithms for block interactions, gravity, and power-ups.
+
+## Power-ups and Scoring
+### Power-ups
+- **Red**: Expands then erases clusters and adjacent blocks.
+- **Green**: Clears blocks and applies vertical "supergravity."
+- **Blue**: Removes all blocks of the same color.
+- **Yellow**: Erases a cluster and all square blocks.
+- **Magenta**: Converts red and blue blocks to magenta, then erases.
+- **Cyan**: Clears clusters and applies horizontal "supergravity."
+- **White**: Clears the entire board and advances to the next level.
+
+### Scoring
+- **Points** are awarded for clearing clusters, with bonuses for large or strategic actions:
+- **Cluster** Clearing: +1 point per cluster block.
+- **Advanced** Actions: +2 points for power-up activations.
+- **Level Clearing**: Reset score multiplier.
 
 ## Controls
 
