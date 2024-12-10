@@ -165,27 +165,6 @@ class Game:
         if self.checkCollision(self.current_mino.shape, 0, 0):
             self.game_over = True
 
-        # print("Debug: New Tetrimino forcefully spawned")
-
-    # def renderScore(self, screen, offset_x=0, offset_y=0):
-    #     score_surface = self.font.render(
-    #         f"Score: {self.score}", True, (255, 255, 255))
-    #     screen.blit(score_surface, (offset_x, offset_y))
-    #
-    # def renderLevel(self, screen, offset_x=0, offset_y=0):
-    #     level_surface = self.font.render(
-    #         f"Level: {self.level}", True, (255, 255, 255))
-    #     screen.blit(level_surface, (offset_x, offset_y))
-    #
-    # def renderWhitePoints(self, screen, offset_x=0, offset_y=0):
-    #     white_point_surface = self.font.render(
-    #         f"White Points: {self.whitePoints}", True, (255, 255, 255))
-    #     screen.blit(white_point_surface, (offset_x, offset_y))
-    #
-    # def renderRedRule(self, screen, offset_x=0, offset_y=0):
-    #     redRule_surface = self.font.render(
-    #         f"Rule: XXXXXXX", True, (255, 255, 255))
-    #     screen.blit(redRule_surface, (offset_x, offset_y))
 
     def renderText(self, screen, text, offset_x=0, initial_offset_y=0, line_spacing=30):
         """
