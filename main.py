@@ -63,6 +63,9 @@ def analyze_board_states(boardStateList):
         if changeTracker[i] != changeTracker[i + 1]:
             changeList.append(i + 1)
 
+    # Ensure the final frame in the animation is the final index
+    changeList.append(-1)
+
     # Calculate points based on changeTracker
     points_earned = 0
     e_count = 0
