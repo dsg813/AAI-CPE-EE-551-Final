@@ -1,9 +1,10 @@
 import pygame
 from game import Game
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, set_boardStateList, get_boardStateList, getWhite, setWhite, getMinos
+from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, set_boardStateList, get_boardStateList, getWhite, setMinos, setWhite, getMinos
 
 CELL_SIZE = 20
 MARGIN = 2
+
 
 def redraw_game_state(screen, game, board_state):
     """Redraw the game state on the screen."""
@@ -16,12 +17,15 @@ def redraw_game_state(screen, game, board_state):
     white_cells = white_points // 8
 
     # Construct the f-string for the text to display
-    text_to_display = construct_text_to_display(game, white_points, white_cells)
+    text_to_display = construct_text_to_display(
+        game, white_points, white_cells)
 
     # Always render text to the right of the game board
-    game.renderText(screen, text=text_to_display, offset_x=SCREEN_WIDTH + 20, initial_offset_y=20)
+    game.renderText(screen, text=text_to_display,
+                    offset_x=SCREEN_WIDTH + 20, initial_offset_y=20)
 
     pygame.display.flip()  # Update the display
+
 
 def analyze_board_states(boardStateList):
     """Analyze the board states and track changes."""
@@ -94,6 +98,7 @@ def analyze_board_states(boardStateList):
 
     return changeTracker, changeList, points_earned
 
+
 def display_board_states(screen, game):
     """Displays the progression of board states in `boardStateList` with scoring."""
     boardStateList = get_boardStateList()
@@ -131,6 +136,7 @@ def display_board_states(screen, game):
     # Remove the current tetrimino block and spawn a new one
     game.forceSpawnNewMino()
 
+
 def construct_text_to_display(game, white_points, white_cells):
     """
     Constructs the f-string for dynamic text display.
@@ -141,7 +147,7 @@ def construct_text_to_display(game, white_points, white_cells):
         f"Level: {len(COLORS)-2}\n"
         f"White Points: {white_points}\n"
         f"White Cells Earned: {white_cells}\n"
-        
+
         f"\n"
         f"Color powers at 8 matching\n"
         f"Red: Expand then pop\n"
@@ -157,9 +163,11 @@ def construct_text_to_display(game, white_points, white_cells):
         f"blocks will \"fall\" to the lowest\n"
         f"unoccupied cell\n"
         f"\n"
+        f"Press R to Reset the Game\n"
         f"Press P to Pause the Game\n"
         f"Press Q to Quit the Game"
     )
+
 
 def main():
     pygame.init()
@@ -194,12 +202,24 @@ def main():
                     is_paused = not is_paused
                 elif event.key == pygame.K_q:  # Quit the game on "Q" key press
                     running = False
+                elif event.key == pygame.K_r:  # Reset the game on "R" key press
+                    # Reset the game state
+                    player_game = Game()  # Reinitialize the game instance
+                    fall_time = 0
+                    move_cooldown = 0
+                    is_animating = False
+                    is_paused = False
+                    setMinos(0)  # Reset Blocks
+                    setWhite(0)  # Reset white points
+                    set_boardStateList([])  # Clear board state list
 
         if is_paused:
             # Display "Paused" message
             font = pygame.font.Font(None, 40)
-            paused_text = font.render("Press P to continue the Game", True, (255, 255, 255))
-            screen.blit(paused_text, ((SCREEN_WIDTH + 450) // 2 - 200, SCREEN_HEIGHT // 2 - 50))
+            paused_text = font.render(
+                "Press P to continue the Game", True, (255, 255, 255))
+            screen.blit(paused_text, ((SCREEN_WIDTH + 450) //
+                        2 - 200, SCREEN_HEIGHT // 2 - 50))
             pygame.display.flip()
             continue  # Skip the rest of the loop while paused
 
@@ -233,7 +253,8 @@ def main():
         boardStateList = get_boardStateList()
         if boardStateList:
             is_animating = True
-            display_board_states(screen, player_game)  # Process animation frames
+            # Process animation frames
+            display_board_states(screen, player_game)
             is_animating = False
 
         # Always render the text and game board
