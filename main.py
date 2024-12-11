@@ -155,7 +155,9 @@ def construct_text_to_display(game, white_points, white_cells):
         f"\n"
         f"Supergravity ignores connections\n"
         f"blocks will \"fall\" to the lowest\n"
-        f"unoccupied cell"
+        f"unoccupied cell\n"
+        f"\n"
+        f"Press P to Pause the Game"
     )
 
 def main():
@@ -175,22 +177,34 @@ def main():
 
     # Flag to track if an animation is running
     is_animating = False
+    is_paused = False  # Pause state flag
 
     running = True
     while running:
         screen.fill(COLORS["0"])  # Clear the screen
         delta_time = clock.tick(30)  # Maintain 30 FPS
 
+        # Event handling
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:  # Pause/resume the game on "P" key press
+                    is_paused = not is_paused
+
+        if is_paused:
+            # Display "Paused" message
+            font = pygame.font.Font(None, 40)
+            paused_text = font.render("Press P to continue the Game", True, (255, 255, 255))
+            screen.blit(paused_text, ((SCREEN_WIDTH + 450) // 2 - 200, SCREEN_HEIGHT // 2 - 50))
+            pygame.display.flip()
+            continue  # Skip the rest of the loop while paused
+
         # Update fall time and cooldowns
         fall_time += delta_time
         move_cooldown += delta_time
 
-        # Handle quitting the game
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-        # If animating, skip input handling
+        # Handle game input if not animating
         if not is_animating:
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT] and move_cooldown > 100:
@@ -237,6 +251,7 @@ def main():
         pygame.display.update()
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
