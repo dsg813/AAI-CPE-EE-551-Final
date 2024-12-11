@@ -1,6 +1,7 @@
 import pygame
 from game import Game
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, set_boardStateList, get_boardStateList, getWhite, setMinos, setWhite, getMinos
+from constants import GRID_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, set_boardStateList, get_boardStateList, getWhite, setMinos, setWhite, getMinos
+from tetrimino import Tetrimino
 
 CELL_SIZE = 20
 MARGIN = 2
@@ -212,6 +213,17 @@ def main():
                     setMinos(0)  # Reset Blocks
                     setWhite(0)  # Reset white points
                     set_boardStateList([])  # Clear board state list
+                    
+                    # Reset COLORS dictionary to default
+                    COLORS.clear()
+                    COLORS.update({
+                        "0": (0, 0, 0),  # Background
+                        "W": (255, 255, 255),  # White
+                        "R": (255, 0, 0),  # Red
+                    })
+                    
+                    # Reinitialize the current Tetrimino to align with updated COLORS
+                    player_game.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
 
         if is_paused:
             # Display "Paused" message
@@ -279,3 +291,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
