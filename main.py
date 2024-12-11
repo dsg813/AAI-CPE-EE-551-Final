@@ -157,7 +157,8 @@ def construct_text_to_display(game, white_points, white_cells):
         f"blocks will \"fall\" to the lowest\n"
         f"unoccupied cell\n"
         f"\n"
-        f"Press P to Pause the Game"
+        f"Press P to Pause the Game\n"
+        f"Press Q to Quit the Game"
     )
 
 def main():
@@ -175,7 +176,7 @@ def main():
     fall_time = 0
     move_cooldown = 0  # Cooldown timer for smoother movement
 
-    # Flag to track if an animation is running
+    # Flags for the game state
     is_animating = False
     is_paused = False  # Pause state flag
 
@@ -191,6 +192,8 @@ def main():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_p:  # Pause/resume the game on "P" key press
                     is_paused = not is_paused
+                elif event.key == pygame.K_q:  # Quit the game on "Q" key press
+                    running = False
 
         if is_paused:
             # Display "Paused" message
