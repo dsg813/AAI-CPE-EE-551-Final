@@ -137,15 +137,18 @@ def display_board_states(screen, game):
     # Remove the current tetrimino block and spawn a new one
     game.forceSpawnNewMino()
 
-
+highest_level = 0
 def construct_text_to_display(game, white_points, white_cells):
     """
     Constructs the f-string for dynamic text display.
     """
+    global highest_level
+    highest_level = max(highest_level, len(COLORS)-2)
     # f"Score: {game.score}\n"
     return (
         f"Block Count: {getMinos()}\n"
         f"Level: {len(COLORS)-2}\n"
+        f"Highest Level: {highest_level}\n"
         f"White Points: {white_points}\n"
         f"White Cells Earned: {white_cells}\n"
 
