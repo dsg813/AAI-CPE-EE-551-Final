@@ -66,7 +66,7 @@ def updateFrame(board):
         # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
         # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
         # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
-        # board = overwriteBoard()
+        board = overwriteBoard()
         # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
         # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
         # COMMENT THIS LINE OUT. FOR TESTING CSV BOARD STATES ONLY
@@ -349,11 +349,12 @@ def squareChanger(board):
                     if cluster_size >= SQUARE_REQ and cell[1] == "C":  # Check for 'S' and size condition
                         board[y][x] = cell[0] + "S" + cell[2:]  # Change 'S' to 'C'
                         has_changes = True
-                        appendBoardList(board)
+
                 except ValueError:
                     print(f"Invalid cluster size in cell {cell} at ({y}, {x}). Skipping.")
     if has_changes == True:
         setWhite(getWhite()+1)
+        appendBoardList(board)
 
     return board, has_changes
 
@@ -409,7 +410,9 @@ def gravityChanger(board):
                 board[y + 1][x] = cell  # Move the cell down
                 board[y][x] = "0000-00"  # Clear the current cell
                 has_changes = True
-                appendBoardList(board)
+
+    if has_changes:
+        appendBoardList(board)
 
     return board, has_changes
 
@@ -458,9 +461,9 @@ def redErase(board):
     Mark adjacent cells (up, down, left, right) with a modified cluster ID (red_erase_expanded_ID),
     and then erase all matching cells.
     """
-    # print("Red power-up activated: Erasing blocks bordering red clusters of size 8+.")
-    # print("Board state before starting:")
-    # printToTerminal(board)
+    print("Red power-up activated: Erasing blocks bordering red clusters of size 8+.")
+    print(f"Board state before starting. ID: {len(boardStateList)}")
+    printToTerminal(board)
 
     # Step 1: Search for the first red cluster of size 8+
     red_erase_ID = None
@@ -508,19 +511,54 @@ def redErase(board):
                     appendBoardList(board)
 
     # Step 4: Print the board state after marking adjacent cells
-    # print("Board after marking adjacent cells:")
-    # printToTerminal(board)
+    print(f"Board after marking adjacent cells. ID: {len(boardStateList)}")
+    printToTerminal(board)
+
+    for y in range(len(board)):
+        for x in range(len(board[0])):
+            cell = board[y][x]
+            board[y][x] = cell[:4] + "-" + cell[5:]
+    print(f"Board after erasing ^ marks. ID: {len(get_boardStateList())}")
+    printToTerminal(board)
+
+    board = contiguousID(board)
+    print(f"Board after redoing IDs. ID: {len(get_boardStateList())}")
+    printToTerminal(board)
+
+    board = contiguousCount(board)
+    print(f"Board after redoing contiguous counts. ID: {len(get_boardStateList())}")
+    printToTerminal(board)
+
+    red_erase_ID = None
+    for y in range(len(board)):
+        for x in range(len(board[0])):
+            cell = board[y][x]
+            if cell[0] == 'R' and int(cell[-2:]) >= EMPTY_REQ:  # Cluster size condition
+                red_erase_ID = cell  # Save the original cluster ID
+                break
+        if red_erase_ID:
+            break
+
+    for y in range(len(board)):
+        for x in range(len(board[0])):
+            cell = board[y][x]
+            if cell[1] == "C" and cell[0] == red_erase_ID[0] and cell[2:] == red_erase_ID[2:]:
+                board[y][x] = cell[:1] + "S" + cell[2:]
+                appendBoardList(board)
+    print(f"Board after checking S marks. ID: {len(get_boardStateList())}")
+    printToTerminal(board)
+
 
     # Step 5: Erase all cells matching red_erase_ID or red_erase_expanded_ID
     for y in range(len(board)):
         for x in range(len(board[0])):
-            if board[y][x] in (red_erase_ID, red_erase_expanded_ID):
+            if board[y][x] == red_erase_ID:
                 board[y][x] = "0000-00"
                 appendBoardList(board)
 
     # Step 6: Print the final board state
-    # print("Board after red power-up:")
-    # printToTerminal(board)
+    print(f"Board after red power-up. ID: {len(get_boardStateList())}")
+    printToTerminal(board)
 
 
     # boardStateList = get_boardStateList()
@@ -575,7 +613,7 @@ def greenErase(board):
                 # Move all cells above down by one
                 for above_row in range(row - 1, -1, -1):  # From row above to the top
                     board[above_row + 1][col] = board[above_row][col]
-                    appendBoardList(board)
+                appendBoardList(board)
                 board[0][col] = "0000-00"  # Clear the top cell after shifting
 
                 # Recheck the same row (reset if it is now filled)
@@ -690,6 +728,8 @@ def magentaErase(board):
     #
     # print("Board after rerunning processBoard logic:")
     # printToTerminal(board)
+
+    board, square_changed = squareChanger(board)
 
     # Step 3: Erase the first detected magenta cluster of size 8+
     cluster_code = None
