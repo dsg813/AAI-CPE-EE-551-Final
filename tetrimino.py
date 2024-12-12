@@ -1,5 +1,5 @@
 import random
-from constants import SHAPES, getColors, getWhite, setWhite
+from constants import SHAPES, getColors, getWhite, setWhite, EMPTY_REQ
 
 class Tetrimino:
     def __init__(self, x, y):  # Default to None
@@ -15,7 +15,7 @@ class Tetrimino:
             for x in range(len(raw_shape[0])):
                 if raw_shape[y][x]:  # If part of the Tetrimino
                     color_index = random.randint(2, len(COLORS) - 1)
-                    if getWhite() > 7:
+                    if getWhite() >= EMPTY_REQ:
                         color_index = 1
                         setWhite(getWhite()-8)
                     row.append(color_index)
