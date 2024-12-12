@@ -235,6 +235,17 @@ def main():
 
     running = True
     while running:
+        if player_game.game_over:
+            font = pygame.font.Font(None, 80)
+            game_over_text = font.render("GAME OVER", True, (255, 0, 0))
+            game_over_text_rect = game_over_text.get_rect(center=(SCREEN_WIDTH // 2 + 100, SCREEN_HEIGHT // 2 - 50))
+            screen.blit(game_over_text, game_over_text_rect)
+            
+            pygame.display.flip()
+            pygame.time.delay(2000)  # Display the message for 2 seconds
+            running = False
+            continue
+
         screen.fill(COLORS["0"])  # Clear the screen
         delta_time = clock.tick(30)  # Maintain 30 FPS
 

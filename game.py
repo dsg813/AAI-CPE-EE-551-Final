@@ -73,6 +73,11 @@ class Game:
         # Update score based on eliminated blocks
         self.updateScore(eliminated_blocks * 100)
 
+        # Check for game over by inspecting the top row
+        if any(cell != "0" for cell in self.grid[0]):
+            self.game_over = True
+            return  # Stop spawning a new Tetrimino if game is over
+
         # Spawn a new Tetrimino
         self.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
 
