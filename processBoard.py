@@ -349,12 +349,12 @@ def squareChanger(board):
                     if cluster_size >= SQUARE_REQ and cell[1] == "C":  # Check for 'S' and size condition
                         board[y][x] = cell[0] + "S" + cell[2:]  # Change 'S' to 'C'
                         has_changes = True
-
+                        appendBoardList(board)
                 except ValueError:
                     print(f"Invalid cluster size in cell {cell} at ({y}, {x}). Skipping.")
     if has_changes == True:
         setWhite(getWhite()+1)
-        appendBoardList(board)
+
 
     return board, has_changes
 
@@ -461,9 +461,9 @@ def redErase(board):
     Mark adjacent cells (up, down, left, right) with a modified cluster ID (red_erase_expanded_ID),
     and then erase all matching cells.
     """
-    print("Red power-up activated: Erasing blocks bordering red clusters of size 8+.")
-    print(f"Board state before starting. ID: {len(boardStateList)}")
-    printToTerminal(board)
+    # print("Red power-up activated: Erasing blocks bordering red clusters of size 8+.")
+    # print(f"Board state before starting. ID: {len(boardStateList)}")
+    # printToTerminal(board)
 
     # Step 1: Search for the first red cluster of size 8+
     red_erase_ID = None
@@ -490,44 +490,44 @@ def redErase(board):
         for x in range(len(board[0])):
             if board[y][x] == red_erase_ID:
                 # Check below
-                if (y + 1 < GRID_HEIGHT and board[y + 1][x] != red_erase_ID
+                if (y + 1 < GRID_HEIGHT and board[y + 1][x] != red_erase_ID and board[y + 1][x][0] != "R"
                         and board[y + 1][x][0] != "0" and board[y + 1][x][0] != "W"):
                     board[y + 1][x] = red_erase_expanded_ID
                     appendBoardList(board)
                 # Check above
-                if (y - 1 >= 0 and board[y - 1][x] != red_erase_ID
+                if (y - 1 >= 0 and board[y - 1][x] != red_erase_ID and board[y - 1][x][0] != "R"
                         and board[y - 1][x][0] != "0" and board[y - 1][x][0] != "W"):
                     board[y - 1][x] = red_erase_expanded_ID
                     appendBoardList(board)
                 # Check to the right
-                if (x + 1 < GRID_WIDTH and board[y][x + 1] != red_erase_ID
+                if (x + 1 < GRID_WIDTH and board[y][x + 1] != red_erase_ID and board[y][x + 1][0] != "R"
                         and board[y][x + 1][0] != "0" and board[y][x + 1][0] != "W"):
                     board[y][x + 1] = red_erase_expanded_ID
                     appendBoardList(board)
                 # Check to the left
-                if (x - 1 >= 0 and board[y][x - 1] != red_erase_ID
+                if (x - 1 >= 0 and board[y][x - 1] != red_erase_ID and board[y][x - 1][0] != "R"
                         and board[y][x - 1][0] != "0" and board[y][x - 1][0] != "W"):
                     board[y][x - 1] = red_erase_expanded_ID
                     appendBoardList(board)
 
     # Step 4: Print the board state after marking adjacent cells
-    print(f"Board after marking adjacent cells. ID: {len(boardStateList)}")
-    printToTerminal(board)
+    # print(f"Board after marking adjacent cells. ID: {len(boardStateList)}")
+    # printToTerminal(board)
 
     for y in range(len(board)):
         for x in range(len(board[0])):
             cell = board[y][x]
             board[y][x] = cell[:4] + "-" + cell[5:]
-    print(f"Board after erasing ^ marks. ID: {len(get_boardStateList())}")
-    printToTerminal(board)
+    # print(f"Board after erasing ^ marks. ID: {len(get_boardStateList())}")
+    # printToTerminal(board)
 
     board = contiguousID(board)
-    print(f"Board after redoing IDs. ID: {len(get_boardStateList())}")
-    printToTerminal(board)
+    # print(f"Board after redoing IDs. ID: {len(get_boardStateList())}")
+    # printToTerminal(board)
 
     board = contiguousCount(board)
-    print(f"Board after redoing contiguous counts. ID: {len(get_boardStateList())}")
-    printToTerminal(board)
+    # print(f"Board after redoing contiguous counts. ID: {len(get_boardStateList())}")
+    # printToTerminal(board)
 
     red_erase_ID = None
     for y in range(len(board)):
@@ -545,8 +545,8 @@ def redErase(board):
             if cell[1] == "C" and cell[0] == red_erase_ID[0] and cell[2:] == red_erase_ID[2:]:
                 board[y][x] = cell[:1] + "S" + cell[2:]
                 appendBoardList(board)
-    print(f"Board after checking S marks. ID: {len(get_boardStateList())}")
-    printToTerminal(board)
+    # print(f"Board after checking S marks. ID: {len(get_boardStateList())}")
+    # printToTerminal(board)
 
 
     # Step 5: Erase all cells matching red_erase_ID or red_erase_expanded_ID
@@ -557,8 +557,8 @@ def redErase(board):
                 appendBoardList(board)
 
     # Step 6: Print the final board state
-    print(f"Board after red power-up. ID: {len(get_boardStateList())}")
-    printToTerminal(board)
+    # print(f"Board after red power-up. ID: {len(get_boardStateList())}")
+    # printToTerminal(board)
 
 
     # boardStateList = get_boardStateList()
@@ -797,7 +797,7 @@ def cyanErase(board):
                 # Move all cells to the right by one
                 for left_col in range(col - 1, -1, -1):  # From the current column to the leftmost column
                     board[row][left_col + 1] = board[row][left_col]
-                    appendBoardList(board)
+                appendBoardList(board)
                 board[row][0] = "0000-00"  # Clear the leftmost cell after shifting
 
                 # Recheck the same column (reset if it is now filled)
