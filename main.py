@@ -52,15 +52,29 @@ def analyze_board_states(boardStateList):
                 changeTracker.append(f"E{prev_cell[2:4]}")  # Data erase
             elif prev_cell[1] == "C" and curr_cell[1] == "S":
                 changeTracker.append(f"S{prev_cell[2:4]}")  # Shape change
-        elif len(non_matching_cells) == 2:
+            elif prev_cell[0] != curr_cell[0]:
+                changeTracker.append(f"C00")  # Color change
+        elif len(non_matching_cells) >= 2:
             changeTracker.append("P00")  # Position change
+        else:
+            changeTracker.append("000")
 
     changeTracker.append("000")
 
+    print(f"boardstatelist states count {len(boardStateList)}")
+    print(f"change tracker length {len(changeTracker)}")
+    print(f"{changeTracker}")
+    print("[", end="")
+    for i in range(len(changeTracker)):
+        print(f"'{i:03}', ", end="")
+    print("]")
     # Create a list of indexes where neighboring values in changeTracker differ
     changeList = []
+
+    changeList.append(0)
+
     for i in range(len(changeTracker) - 1):
-        if changeTracker[i] != changeTracker[i + 1]:
+        if changeTracker[i] != changeTracker[i + 1] or changeTracker[i] == "P00":
             changeList.append(i + 1)
 
     # Ensure the final frame in the animation is the final index
@@ -106,17 +120,21 @@ def analyze_board_states(boardStateList):
 def display_board_states(screen, game):
     """Displays the progression of board states in `boardStateList` with scoring."""
     boardStateList = get_boardStateList()
-    if not boardStateList or len(boardStateList) <= 2:
+    if not boardStateList or len(boardStateList) <= 3:
         return
 
     _, changeList, points_earned = analyze_board_states(boardStateList)
 
+    print(f"change list {changeList}")
     # Update the white points earned
     setWhite(getWhite() + points_earned)
 
     # Display all board states in order
-    for i, board_state in enumerate(boardStateList):
-        redraw_game_state(screen, game, board_state)
+    for i in range(len(boardStateList) - 1):
+        if boardStateList[i] == boardStateList[i+1]:
+            continue
+        redraw_game_state(screen, game, boardStateList[i])
+        print(f"Board state {i}")
         if i == 0:
             pygame.time.delay(500)  # First state lasts 0.5 seconds
         else:
@@ -124,10 +142,10 @@ def display_board_states(screen, game):
 
     # Display key frames from changeList twice
     for _ in range(2):
-        for index in changeList:
-            if index < len(boardStateList):  # Ensure index is within bounds
-                redraw_game_state(screen, game, boardStateList[index])
-                pygame.time.delay(250)  # Display for 0.25 seconds
+        for i in range(len(changeList)-1):
+            redraw_game_state(screen, game, boardStateList[changeList[i]])
+            print(f"Board state {changeList[i]}")
+            pygame.time.delay(350)  # Display for 0.35 seconds
 
             # Handle quitting the game during animation
             for event in pygame.event.get():
