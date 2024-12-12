@@ -868,26 +868,16 @@ def overwriteBoard():
     TEST_CASES_FOLDER = "Test Cases CSVs"
 
     # Filename pattern: starts with a 2-digit number followed by any text, ends in .csv
-    FILENAME_PATTERN = r"^\d{2}.*\.csv$"
+    FILENAME_PATTERN = "01 manual 100 percent red.csv"
 
-    # Check if the folder exists
-    if not os.path.exists(TEST_CASES_FOLDER):
-        print(f"Error: Folder '{TEST_CASES_FOLDER}' does not exist.")
-        return None
+    # Specify the path to your CSV file within a folder in the working directory
+    filepath = f"{TEST_CASES_FOLDER}/{FILENAME_PATTERN}"
 
-    # Find the first matching file in the folder
-    for filename in os.listdir(TEST_CASES_FOLDER):
-        if re.match(FILENAME_PATTERN, filename):
-            filepath = os.path.join(TEST_CASES_FOLDER, filename)
-            try:
-                # Read the board from the file
-                with open(filepath, "r") as file:
-                    board = [line.strip().split(",") for line in file]
-                print(f"Successfully loaded board from {filepath}")
-                return board
-            except Exception as e:
-                print(f"Error reading file '{filepath}': {e}")
-                return None
+    # Open the file and read its contents
+    with open(filepath, 'r') as file:
+        board = [line.strip().split(",") for line in file]
 
-    print(f"No test case files matching pattern '{FILENAME_PATTERN}' found.")
-    return None
+    # Print the board data
+    printToTerminal(board)
+
+    return board
