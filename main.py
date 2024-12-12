@@ -201,7 +201,7 @@ def construct_text_to_display(game, white_points, white_cells):
         f"Red: Expand then pop\n"
         f"Green: Pop then supergravity\n"
         f"Blue: Pop ALL blue\n"
-        f"Blue: Pop ALL squares\n"
+        f"Yellow: Pop ALL squares\n"
         f"Magenta: Convert all Red and\n"
         f"Blue to Magenta then pop\n"
         f"Cyan: Pop then supergravity right\n"
