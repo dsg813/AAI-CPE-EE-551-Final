@@ -2,6 +2,7 @@ import pygame
 from game import Game
 from constants import GRID_WIDTH, SCREEN_WIDTH, SCREEN_HEIGHT, COLORS, set_boardStateList, get_boardStateList, getWhite, setMinos, setWhite, getMinos
 from tetrimino import Tetrimino
+import os
 
 CELL_SIZE = 20
 MARGIN = 2
@@ -159,20 +160,40 @@ def display_board_states(screen, game):
     game.forceSpawnNewMino()
 
 
-highest_level = 0
+def read_highest_values():
+    """Read the highest level and score from the file."""
+    if not os.path.exists("ScoreLevel.txt"):
+        with open("ScoreLevel.txt", "w") as file:
+            file.write("0\n0")  # Initialize with 0 for both values
+    with open("ScoreLevel.txt", "r") as file:
+        lines = file.readlines()
+        highest_level = int(lines[0].strip())
+        highest_score = int(lines[1].strip())
+    return highest_level, highest_score
+
+def update_highest_values(new_level, new_score):
+    """Update the highest level and score in the file."""
+    highest_level, highest_score = read_highest_values()
+    highest_level = max(highest_level, new_level)
+    highest_score = max(highest_score, new_score)
+    with open("ScoreLevel.txt", "w") as file:
+        file.write(f"{highest_level}\n{highest_score}")
+    return highest_level, highest_score
 
 
 def construct_text_to_display(game, white_points, white_cells):
     """
     Constructs the f-string for dynamic text display.
     """
-    global highest_level
-    highest_level = max(highest_level, len(COLORS)-2)
+    highest_level, highest_score = read_highest_values()
+    highest_level, highest_score = update_highest_values(len(COLORS)-2, game.score)
+
     # f"Score: {game.score}\n"
     return (
         f"Block Count: {getMinos()}\n"
         f"Level: {len(COLORS)-2}\n"
         f"Highest Level: {highest_level}\n"
+        f"Highest Score: {highest_score}\n"
         f"White Points: {white_points}\n"
         f"White Cells Earned: {white_cells}\n"
         f"\n"
