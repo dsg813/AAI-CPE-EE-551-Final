@@ -158,7 +158,10 @@ def display_board_states(screen, game):
     # Remove the current tetrimino block and spawn a new one
     game.forceSpawnNewMino()
 
+
 highest_level = 0
+
+
 def construct_text_to_display(game, white_points, white_cells):
     """
     Constructs the f-string for dynamic text display.
@@ -172,7 +175,6 @@ def construct_text_to_display(game, white_points, white_cells):
         f"Highest Level: {highest_level}\n"
         f"White Points: {white_points}\n"
         f"White Cells Earned: {white_cells}\n"
-
         f"\n"
         f"Color powers at 8 matching\n"
         f"Red: Expand then pop\n"
@@ -183,14 +185,11 @@ def construct_text_to_display(game, white_points, white_cells):
         f"Blue to Magenta then pop\n"
         f"Cyan: Pop then supergravity right\n"
         f"White: Clear board, next level\n"
-
         f"\n"
         f"Supergravity ignores connections\n"
         f"cells will \"fall\" in their row \\ column\n"
         f"\n"
-        f"Press R to Reset the game\n"
-        f"Press P to Pause and open menu\n"
-        f"Press Q to Quit the game"
+        f"Press M to Open the menu"
     )
 
 
@@ -223,7 +222,7 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:  # Pause/resume the game on "P" key press
+                if event.key == pygame.K_m:  # Pause/resume the game on "P" key press
                     is_paused = not is_paused
                 elif event.key == pygame.K_q:  # Quit the game on "Q" key press
                     running = False
@@ -237,7 +236,7 @@ def main():
                     setMinos(0)  # Reset Blocks
                     setWhite(0)  # Reset white points
                     set_boardStateList([])  # Clear board state list
-                    
+
                     # Reset COLORS dictionary to default
                     COLORS.clear()
                     COLORS.update({
@@ -245,17 +244,26 @@ def main():
                         "W": (255, 255, 255),  # White
                         "R": (255, 0, 0),  # Red
                     })
-                    
+
                     # Reinitialize the current Tetrimino to align with updated COLORS
-                    player_game.current_mino = Tetrimino(GRID_WIDTH // 2 - 1, 0)
+                    player_game.current_mino = Tetrimino(
+                        GRID_WIDTH // 2 - 1, 0)
 
         if is_paused:
             # Display "Paused" message
             font = pygame.font.Font(None, 40)
-            paused_text = font.render(
-                "Press P to continue the Game", True, (255, 255, 255))
-            screen.blit(paused_text, ((SCREEN_WIDTH + 450) //
-                        2 - 200, SCREEN_HEIGHT // 2 - 50))
+            menu_text = font.render(
+                f"Press M to close the menu", True, (255, 255, 255))
+            screen.blit(menu_text, ((SCREEN_WIDTH + 450) //
+                        2 - 200, SCREEN_HEIGHT // 2 - 100))
+            reset_text = font.render(
+                f"Press R to Reset the game", True, (255, 255, 255))
+            screen.blit(reset_text, ((SCREEN_WIDTH + 450) //
+                        2 - 200, SCREEN_HEIGHT // 2 - 150))
+            quit_text = font.render(
+                f"Press Q to Quit the game", True, (255, 255, 255))
+            screen.blit(quit_text, ((SCREEN_WIDTH + 450) //
+                        2 - 200, SCREEN_HEIGHT // 2 - 200))
             pygame.display.flip()
             continue  # Skip the rest of the loop while paused
 
@@ -315,4 +323,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
