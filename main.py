@@ -188,9 +188,9 @@ def construct_text_to_display(game, white_points, white_cells):
         f"Supergravity ignores connections\n"
         f"cells will \"fall\" in their row \\ column\n"
         f"\n"
-        f"Press R to Reset the Game\n"
-        f"Press P to Pause the Game\n"
-        f"Press Q to Quit the Game"
+        f"Press R to Reset the game\n"
+        f"Press P to Pause and open menu\n"
+        f"Press Q to Quit the game"
     )
 
 
