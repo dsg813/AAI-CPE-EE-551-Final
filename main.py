@@ -61,13 +61,13 @@ def analyze_board_states(boardStateList):
 
     changeTracker.append("000")
 
-    print(f"boardstatelist states count {len(boardStateList)}")
-    print(f"change tracker length {len(changeTracker)}")
-    print(f"{changeTracker}")
-    print("[", end="")
-    for i in range(len(changeTracker)):
-        print(f"'{i:03}', ", end="")
-    print("]")
+    # print(f"boardstatelist states count {len(boardStateList)}")
+    # print(f"change tracker length {len(changeTracker)}")
+    # print(f"{changeTracker}")
+    # print("[", end="")
+    # for i in range(len(changeTracker)):
+    #     print(f"'{i:03}', ", end="")
+    # print("]")
     # Create a list of indexes where neighboring values in changeTracker differ
     changeList = []
 
@@ -125,7 +125,7 @@ def display_board_states(screen, game):
 
     _, changeList, points_earned = analyze_board_states(boardStateList)
 
-    print(f"change list {changeList}")
+    # print(f"change list {changeList}")
     # Update the white points earned
     setWhite(getWhite() + points_earned)
 
@@ -134,7 +134,7 @@ def display_board_states(screen, game):
         if boardStateList[i] == boardStateList[i+1]:
             continue
         redraw_game_state(screen, game, boardStateList[i])
-        print(f"Board state {i}")
+        # print(f"Board state {i}")
         if i == 0:
             pygame.time.delay(500)  # First state lasts 0.5 seconds
         else:
@@ -144,7 +144,7 @@ def display_board_states(screen, game):
     for _ in range(2):
         for i in range(len(changeList)-1):
             redraw_game_state(screen, game, boardStateList[changeList[i]])
-            print(f"Board state {changeList[i]}")
+            # print(f"Board state {changeList[i]}")
             pygame.time.delay(350)  # Display for 0.35 seconds
 
             # Handle quitting the game during animation
@@ -178,6 +178,7 @@ def construct_text_to_display(game, white_points, white_cells):
         f"Red: Expand then pop\n"
         f"Green: Pop then supergravity\n"
         f"Blue: Pop ALL blue\n"
+        f"Blue: Pop ALL squares\n"
         f"Magenta: Convert all Red and\n"
         f"Blue to Magenta then pop\n"
         f"Cyan: Pop then supergravity right\n"
@@ -185,8 +186,7 @@ def construct_text_to_display(game, white_points, white_cells):
 
         f"\n"
         f"Supergravity ignores connections\n"
-        f"blocks will \"fall\" to the lowest\n"
-        f"unoccupied cell\n"
+        f"cells will \"fall\" in their row \\ column\n"
         f"\n"
         f"Press R to Reset the Game\n"
         f"Press P to Pause the Game\n"
