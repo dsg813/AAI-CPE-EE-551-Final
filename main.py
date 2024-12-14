@@ -219,7 +219,7 @@ def main():
 
     # Screen dimensions for a single board
     screen = pygame.display.set_mode((SCREEN_WIDTH + 450, SCREEN_HEIGHT))
-    pygame.display.set_caption("Tetris")
+    pygame.display.set_caption("Tetrimino")
     clock = pygame.time.Clock()
 
     # Create a Game instance
